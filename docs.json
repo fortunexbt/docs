@@ -118,7 +118,9 @@
             "pages": [
               "labs/solar-drift",
               "labs/loop-courier",
-              "labs/switchyard"
+              "labs/switchyard",
+              "labs/ambient-relay",
+              "labs/queueglass"
             ]
           }
         ]
