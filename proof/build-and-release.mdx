@@ -88,11 +88,11 @@ The receipt should point to immutable logs or artifacts when automation generate
 | Project | Strongest current proof | Missing or expanding proof |
 |---|---|---|
 | MUTX | Releases, layered CI, CLI health, browser tests, signed macOS distribution | Public end-to-end operator receipt with redacted run/audit evidence |
-| Tablebeam | Fake-provider tests and visible source rows | Versioned release and stable UI capture from a known dataset |
-| Terminal Starfield | v3 release, seeded snapshots, state output, full campaign tests | Packaged install artifact and remote-play smoke test if that surface ships |
-| ckitty | Deterministic dump, native tests, PTY resize test, sanitizers | Versioned binaries/package formula and artifact checksums |
-| Barter lab | Inspectable UI/API/proof experiment source | Deterministic state, integration tests, real chain receipts, CI, honest release boundary |
-| SecurePath lab | Inspectable provider and Discord integration source | Offline fixtures, citations eval, tests, CI, modular packaging |
+| Tablebeam | v2 release, fake-provider tests, and visible source rows | Versioned public fixture dataset, recognizable UI capture, and retrieval/citation-fidelity evals |
+| Terminal Starfield | v3 release, seeded snapshots, state output, full campaign tests, zip/checksum/media assets | Package-manager install receipt and remote-play smoke test if that surface ships |
+| ckitty | v1 release, deterministic dump, native and PTY resize tests, sanitizers, Linux/macOS binaries with checksums | Package-manager install receipt and a broader release-platform matrix |
+| Barter lab | v2 release, three deterministic fixtures, immutable replay, reducer tests, CI | Signed external evidence, a real integration receipt, and a threat model before handling identity or value |
+| SecurePath lab · security hold | Dependency-free replay, policy checks, provenance hash, and 35-test suite | Credential revocation, history remediation, fresh scan, and replacement release; live provider/Discord behavior remains unverified |
 
 ## Release gate
 
@@ -122,4 +122,3 @@ A strong repository should let a reader move through four layers:
 4. **Contributor depth:** source layout, development setup, roadmap, and issue path.
 
 The Field Manual occupies the third layer. It should never make the first layer louder by making the evidence quieter.
-
