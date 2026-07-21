@@ -1,15 +1,19 @@
 ---
-title: "SecurePath lab: evidence that survives the answer"
-description: "How SecurePath builds deterministic, policy-checked evidence packets and keeps live providers behind explicit boundaries."
+title: "SecurePath lab: temporary security hold"
+description: "The bounded SecurePath evidence proof and the historical credential-remediation gate that currently pauses public promotion."
 icon: "route"
 ---
 
-SecurePath v0.2.0 is an offline-first evidence lab. Its default command needs no Discord token, provider key, database, third-party package, or network request.
+SecurePath v0.2.0 is an offline-first evidence lab. Its current implementation needs no Discord token, provider key, database, third-party package, or network request. Public promotion paused on 22 July 2026 after newly enabled historical scanning surfaced a credential-remediation gate.
+
+<Warning>
+  Do not clone, fork, or deploy this repository while the hold is active. The current tree excludes the affected file and future pushes are protected; credential revocation and historical cleanup must still be confirmed before a fresh release is promoted.
+</Warning>
 
 <div className="fm-evidence-strip fm-lab-warning">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Status</span>
-    <span className="fm-proof-value">Released lab · v0.2.0</span>
+    <span className="fm-proof-value">Security hold · v0.2.0 withdrawn from promotion</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Verified center</span>
@@ -17,19 +21,13 @@ SecurePath v0.2.0 is an offline-first evidence lab. Its default command needs no
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Critical boundary</span>
-    <span className="fm-proof-value">Integrity detects change; it does not establish source truth</span>
+    <span className="fm-proof-value">Current source is bounded; historical credential remediation remains open</span>
   </div>
 </div>
 
-## The offline proof
+## The bounded implementation
 
-```bash
-git clone https://github.com/fortunexbt/securepath.git
-cd securepath
-python -m securepath replay --format json --verify
-```
-
-The command loads a labeled synthetic validator-operations case, applies the evidence policy, canonicalizes and deduplicates its sources, maps claims to stable source IDs, and computes an integrity identity over the complete public evidence payload.
+The offline replay loads a labeled synthetic validator-operations case, applies the evidence policy, canonicalizes and deduplicates its sources, maps claims to stable source IDs, and computes an integrity identity over the complete public evidence payload.
 
 The packaged case currently produces packet `sp_b176b4aa1c386d35`. Repeating the command produces the same JSON, Markdown, packet ID, and SHA-256 digest.
 
@@ -87,18 +85,13 @@ SecurePath is educational research infrastructure, not financial, legal, securit
 
 ## Next proof gates
 
+- Confirm provider-side credential revocation, remove the affected historical path from every reachable ref, complete cached-object cleanup, rerun security scanning, and cut a fresh release before restoring clone instructions.
 - Archive source content or content digests when licensing and privacy permit.
 - Add a versioned live evaluation corpus with expected domains and claim-support scoring.
 - Record provider, model, endpoint policy, latency, cost, and citation outcomes without logging secrets or question bodies.
 - Replace the process-local Discord limiter with shared abuse and cost controls before multi-instance use.
 - Exercise provider and Discord paths in a credentialed sandbox with recorded, redacted receipts.
 
-## Inspect the evidence
+## Evidence availability
 
-- [v0.2.0 release](https://github.com/fortunexbt/securepath/releases/tag/v0.2.0)
-- [Evidence models](https://github.com/fortunexbt/securepath/blob/main/securepath/models.py)
-- [Policy boundary](https://github.com/fortunexbt/securepath/blob/main/securepath/policy.py)
-- [Provenance identity](https://github.com/fortunexbt/securepath/blob/main/securepath/provenance.py)
-- [Offline fixture](https://github.com/fortunexbt/securepath/blob/main/securepath/fixtures/validator_controls.json)
-- [35-test suite](https://github.com/fortunexbt/securepath/tree/main/tests)
-- [CI proof](https://github.com/fortunexbt/securepath/actions/workflows/test.yml)
+Direct repository and release links are intentionally withheld while the security hold is active. Restore them only after revocation, history cleanup, a green rescan, and a new versioned release.
