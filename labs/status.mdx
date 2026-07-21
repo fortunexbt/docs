@@ -1,10 +1,10 @@
 ---
 title: "Labs status"
-description: "A dated ledger of implemented, simulated, and planned behavior in Barter and SecurePath."
+description: "A dated ledger of verified, simulated, and still-unproven behavior in Barter and SecurePath."
 icon: "flask-conical"
 ---
 
-Labs contain real code and unresolved operating assumptions. They are documented here because an honest experiment is more useful than a polished ambiguity.
+Labs can earn a release without pretending to be production systems. Barter and SecurePath now ship reproducible offline proofs; their external-world claims remain deliberately bounded.
 
 <div className="fm-evidence-strip fm-lab-warning">
   <div className="fm-evidence-cell">
@@ -12,29 +12,31 @@ Labs contain real code and unresolved operating assumptions. They are documented
     <span className="fm-proof-value">21 July 2026 · public default branches</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Promotion rule</span>
-    <span className="fm-proof-value">Reproducible demo, tests, explicit boundary, versioned release</span>
+    <span className="fm-proof-label">Promotion earned</span>
+    <span className="fm-proof-value">Fixture, tests, explicit boundary, CI, versioned release</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Editorial rule</span>
-    <span className="fm-proof-value">Code wins when README and implementation disagree</span>
+    <span className="fm-proof-label">Still required</span>
+    <span className="fm-proof-value">Operational evidence for every live integration claim</span>
   </div>
 </div>
 
 ## Current ledger
 
-| Lab | Implemented | Simulated or unverified | Next proof gate |
+| Lab | Verified now | Simulated or unverified | Next proof gate |
 |---|---|---|---|
-| [Barter](/labs/barter) | React/Express application, PostgreSQL adapter, session flows, WebSocket notifications, Semaphore proof code | Blockchain receipts and balances are generated; AI matching is not evidenced; proof flow lacks end-to-end verification | Deterministic scenario, CI, tests, real local-chain receipt, verified proof flow |
-| [SecurePath](/labs/securepath) | Discord integration, OpenAI/Perplexity clients, citations handling, chart command, usage telemetry, database manager | “Quant-level” quality is not evaluated; no offline fixture or test suite; provider configuration has a hard requirement bug | Modular core, fixture replay, citation evals, provider-specific configuration tests |
+| [Barter](/labs/barter) | Three deterministic exchange fixtures, validated reducer, immutable event replay, no-secret/no-database mode, four tests, CI, v2.0.0 release | Parties, prices, documents, identity, inspection, escrow, settlement, and every represented exchange outcome | Signed external evidence, a real integration receipt, and a threat model before handling identity or value |
+| [SecurePath](/labs/securepath) | Dependency-free evidence replay, policy-checked citations, canonical provenance hash, 35 tests across Python 3.11–3.13, CI, v0.2.0 release | Provider citation truth, live provider/Discord operation, multi-instance rate control, and source-page preservation | Recorded live evaluations with archived evidence, claim-support scoring, and deployment-level abuse/cost controls |
 
-## Why the labels matter
+## What changed
 
-Barter contains a service named `SmartContractService`. The implementation says that it simulates blockchain behavior and generates transaction-shaped values with randomness. The correct label is **simulated**, regardless of the class name.
+Barter no longer presents generated blockchain telemetry or an untested proof package as a live capability. The public center is an air-gapped protocol study. Its legacy application remains available behind conspicuous simulation labels, and real identity-document intake is removed.
 
-SecurePath retrieves citations on one provider path and contains substantial Discord operations code. It does not have an evaluation harness proving research accuracy. The correct label is **experiment**, not “verified intelligence.”
+SecurePath no longer requires Discord or provider credentials to import or run. Its default path constructs the same integrity-bound evidence packet from a packaged synthetic case. Live providers and Discord are lazy adapters over that core.
 
-## Promotion sequence
+## Why these are still labs
+
+A deterministic settlement state is not legal settlement. A provider-supplied citation is not independent source verification. The releases prove software behavior inside a controlled envelope; they do not prove the external institutions, data, or counterparties represented by the interface.
 
 ```mermaid
 flowchart LR
@@ -46,9 +48,8 @@ flowchart LR
   Release --> Operate[Operational evidence]
 ```
 
-Projects can publish a lab release before production readiness. The release must preserve the lab label and make the unsupported envelope easy to find.
+Both projects have reached **Release**. Neither claims **Operate** for its optional live paths.
 
 <Note>
-  A lab page should be updated in the same change that crosses one of these boundaries. Dated status prevents old caution from surviving after a fix—or old ambition from surviving after a pivot.
+  A lab page should change in the same pull request that crosses one of these boundaries. Dated status prevents old caution from surviving after a fix—or old ambition from surviving after a pivot.
 </Note>
-

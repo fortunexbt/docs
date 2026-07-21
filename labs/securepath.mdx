@@ -1,88 +1,104 @@
 ---
-title: "SecurePath lab: research with an evidence trail"
-description: "What SecurePath implements today and the steps required to make crypto research replayable and evaluable."
+title: "SecurePath lab: evidence that survives the answer"
+description: "How SecurePath builds deterministic, policy-checked evidence packets and keeps live providers behind explicit boundaries."
 icon: "route"
 ---
 
-SecurePath is a Discord-native crypto research agent with real provider, chart, telemetry, and operations code. Its credible next step is an evidence-replay workbench with Discord as one adapter.
+SecurePath v0.2.0 is an offline-first evidence lab. Its default command needs no Discord token, provider key, database, third-party package, or network request.
 
 <div className="fm-evidence-strip fm-lab-warning">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Status</span>
-    <span className="fm-proof-value">Experiment</span>
+    <span className="fm-proof-value">Released lab · v0.2.0</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Implemented center</span>
-    <span className="fm-proof-value">Discord, provider calls, citations, charts, telemetry</span>
+    <span className="fm-proof-label">Verified center</span>
+    <span className="fm-proof-value">Deterministic replay, 35 tests, Python 3.11–3.13</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Critical gap</span>
-    <span className="fm-proof-value">No offline replay, automated tests, or research-quality eval</span>
+    <span className="fm-proof-label">Critical boundary</span>
+    <span className="fm-proof-value">Integrity detects change; it does not establish source truth</span>
   </div>
 </div>
 
-## Implemented in the public repository
+## The offline proof
 
-- Discord commands, direct-message handling, presence, long responses, and embeds;
-- Perplexity and OpenAI client paths;
-- source extraction and citation formatting on the Perplexity response path;
-- image and chart analysis commands with model fallback behavior;
-- conversation context handling and multi-channel summaries;
-- rate and daily-use controls;
-- token and cost telemetry;
-- PostgreSQL-oriented usage and query logging through `asyncpg`;
-- a small health endpoint and process lifecycle handling.
+```bash
+git clone https://github.com/fortunexbt/securepath.git
+cd securepath
+python -m securepath replay --format json --verify
+```
 
-This is meaningful integration work. It is concentrated in a large application module, which makes isolated verification difficult.
+The command loads a labeled synthetic validator-operations case, applies the evidence policy, canonicalizes and deduplicates its sources, maps claims to stable source IDs, and computes an integrity identity over the complete public evidence payload.
 
-## Configuration boundary
-
-The current configuration validates credentials at import time. `DISCORD_TOKEN` and `OWNER_ID` are required. `PERPLEXITY_API_KEY` is inserted into the required configuration set before the provider branch, so the OpenAI-only path still fails without a Perplexity key.
-
-That is an implementation defect, not an operator prerequisite. Provider-specific validation should occur only when that provider is selected.
-
-## Claims without an evaluation surface
-
-The README describes high-performance, advanced, and “quant-level” analysis. The repository has no fixture corpus, expected citation set, accuracy rubric, regression evaluation, or benchmark supporting those quality claims.
-
-The appropriate description is **crypto research agent experiment with source-aware and chart-analysis paths**.
-
-<Warning>
-  SecurePath provides generated research, not financial advice. A citation proves that a source was attached to an answer; it does not prove that the source supports every conclusion.
-</Warning>
-
-## Target architecture
+The packaged case currently produces packet `sp_b176b4aa1c386d35`. Repeating the command produces the same JSON, Markdown, packet ID, and SHA-256 digest.
 
 ```mermaid
 flowchart LR
-  Discord[Discord adapter] --> Core[Research core]
-  CLI[Offline replay CLI] --> Core
-  Fixture[Versioned question and source fixtures] --> Core
-  Core --> Provider[Provider adapters]
-  Provider --> Evidence[Normalized sources and excerpts]
-  Evidence --> Compose[Answer composer]
-  Compose --> Packet[Answer and evidence packet]
-  Packet --> Eval[Citation and regression evals]
-  Packet --> Discord
+  Fixture[Versioned synthetic case] --> Connector[Fixture connector]
+  Live[Optional live provider] --> Connector2[Live connector]
+  Connector --> Policy[Evidence policy]
+  Connector2 --> Policy
+  Policy --> Canon[Canonical sources and claims]
+  Canon --> Packet[Integrity-bound evidence packet]
+  Packet --> JSON[Deterministic JSON]
+  Packet --> MD[Readable Markdown]
+  Packet --> Discord[Optional Discord bridge]
 ```
 
-This shape moves provider and research behavior out of the Discord event loop. The same fixture can then run through a fake provider in CI and a live provider in an explicitly networked evaluation.
+## What the policy checks
 
-## Promotion gates
+- claims reference known source IDs;
+- fixture cases cannot smuggle live, file, or executable URIs;
+- live citations require HTTPS and reject embedded credentials or secret-shaped query fields;
+- timestamps include a timezone;
+- unsourced answers cannot attach source-shaped data;
+- metadata, questions, messages, and source material remain size-bounded;
+- duplicate canonical URLs collapse and claim references remap;
+- Discord mentions are neutralized before delivery.
 
-- Split Discord, provider, research, persistence, and presentation concerns into modules.
-- Add `.env.example` without secrets and validate provider credentials lazily.
-- Add an offline fixture that starts without Discord or external keys.
-- Test rate limits, context trimming, citation normalization, provider errors, and configuration branches.
-- Define a small evaluation corpus with expected source domains and claim support.
-- Record provider/model/version and source URLs in an evidence packet.
-- Add CI, a real license file, and a versioned lab release.
-- Replace performance adjectives with measured latency, cost, and eval results.
+Changing the answer, sources, claims, metadata, or capture details breaks verification.
 
-## Inspect the source
+## Explicit live adapters
 
-- [Repository](https://github.com/fortunexbt/securepath)
-- [Application module](https://github.com/fortunexbt/securepath/blob/main/main.py)
-- [Configuration](https://github.com/fortunexbt/securepath/blob/main/config.py)
-- [Database manager](https://github.com/fortunexbt/securepath/blob/main/database.py)
-- [Dependency list](https://github.com/fortunexbt/securepath/blob/main/requirements.txt)
+Live configuration is loaded only by an explicit live command. Selecting OpenAI requires only `OPENAI_API_KEY`; selecting Perplexity requires only `PERPLEXITY_API_KEY`. Configuration summaries expose provider, model, host, timeout, and rate-limit settings—never secret values.
+
+| Adapter | Evidence state | Boundary |
+|---|---|---|
+| Perplexity | `provider-cited` when the response contains supported citation shapes | Citations are preserved, not independently checked |
+| OpenAI chat completion | `unsourced` | Normal completion output supplies no citation chain this lab can preserve |
+| Discord `!ask` | Same packet as the selected provider | Mention-safe and process-rate-limited; not multi-instance abuse control |
+
+Live HTTP errors expose status or exception type rather than provider response bodies. Redirects are blocked so a configured endpoint cannot silently carry a request to another host.
+
+## What was intentionally removed
+
+The legacy application mixed Discord events, chart analysis, conversation memory, scheduled summaries, owner commands, PostgreSQL telemetry, provider I/O, and performance language inside a 2,088-line module. Those surfaces had no maintained offline proof and are not part of v0.2.0.
+
+This is a scope reduction and a trust improvement. The useful center—provider results, citations, policy, provenance, and presentation—is now independently testable.
+
+## What the hash cannot prove
+
+<Warning>
+  A valid packet proves only that its recorded evidence payload has not changed. It does not prove that a cited page is correct, that a provider represented it faithfully, that the page still contains the same content, or that a generated conclusion is safe to act on.
+</Warning>
+
+SecurePath is educational research infrastructure, not financial, legal, security, or investment advice.
+
+## Next proof gates
+
+- Archive source content or content digests when licensing and privacy permit.
+- Add a versioned live evaluation corpus with expected domains and claim-support scoring.
+- Record provider, model, endpoint policy, latency, cost, and citation outcomes without logging secrets or question bodies.
+- Replace the process-local Discord limiter with shared abuse and cost controls before multi-instance use.
+- Exercise provider and Discord paths in a credentialed sandbox with recorded, redacted receipts.
+
+## Inspect the evidence
+
+- [v0.2.0 release](https://github.com/fortunexbt/securepath/releases/tag/v0.2.0)
+- [Evidence models](https://github.com/fortunexbt/securepath/blob/main/securepath/models.py)
+- [Policy boundary](https://github.com/fortunexbt/securepath/blob/main/securepath/policy.py)
+- [Provenance identity](https://github.com/fortunexbt/securepath/blob/main/securepath/provenance.py)
+- [Offline fixture](https://github.com/fortunexbt/securepath/blob/main/securepath/fixtures/validator_controls.json)
+- [35-test suite](https://github.com/fortunexbt/securepath/tree/main/tests)
+- [CI proof](https://github.com/fortunexbt/securepath/actions/workflows/test.yml)
