@@ -112,6 +112,14 @@
               "labs/barter",
               "labs/securepath"
             ]
+          },
+          {
+            "group": "Night-shift launches",
+            "pages": [
+              "labs/solar-drift",
+              "labs/loop-courier",
+              "labs/switchyard"
+            ]
           }
         ]
       }
