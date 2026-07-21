@@ -1,111 +1,102 @@
 ---
-title: "Barter lab: verifiable trade, honestly scoped"
-description: "What the Barter repository implements today, what it simulates, and the proof required for a credible protocol lab."
+title: "Barter lab: trade logic, laid bare"
+description: "How Barter turns an over-broad marketplace prototype into a deterministic, no-secret commodity-exchange protocol study."
 icon: "handshake"
 ---
 
-Barter is a substantial commodity-market application prototype. Its strongest next form is a **verifiable trade protocol lab**, not a production exchange claim.
+Barter v2.0.0 is a released protocol lab: three synthetic commodity exchanges, one validated state machine, and an event tape that runs without accounts, secrets, a database, or an external service.
 
 <div className="fm-evidence-strip fm-lab-warning">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Status</span>
-    <span className="fm-proof-value">Experiment</span>
+    <span className="fm-proof-value">Released lab · v2.0.0</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Implemented center</span>
-    <span className="fm-proof-value">Full-stack workflows and Semaphore integration code</span>
+    <span className="fm-proof-label">Verified center</span>
+    <span className="fm-proof-value">Deterministic reducer, three fixtures, four tests, CI</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Critical boundary</span>
-    <span className="fm-proof-value">Escrow and blockchain telemetry are simulated</span>
+    <span className="fm-proof-value">Every party, document, price, and outcome is synthetic</span>
   </div>
 </div>
 
-<Warning>
-  The public README currently describes blockchain-backed smart contracts and AI-powered matching as implemented features. The public code does not support those claims at that level.
-</Warning>
+## The released proof
 
-## Implemented in the public repository
+The public `/lab` route presents three fixed exchange folios:
 
-- a React and TypeScript client with marketplace, account, contract, KYC, onboarding, and administration surfaces;
-- an Express API with session authentication and shared Zod/Drizzle schemas;
-- PostgreSQL storage through Drizzle and a migration runner;
-- WebSocket notification handling;
-- commodity, offer, contract, transaction, notification, and KYC records;
-- imports and service code for Semaphore identity, group membership, proof generation, and proof verification;
-- demo-oriented UI flows and seeded records.
+- a direct copper-cathode / green-coffee exchange;
+- a durum-wheat / freight-capacity counter-offer;
+- a cocoa-bean / machine-bearing inspection hold and cancellation.
 
-These pieces establish a broad application shell and a useful protocol-design surface.
-
-## Simulated in the public repository
-
-[`server/services/smart-contract-service.ts`](https://github.com/fortunexbt/barter/blob/main/server/services/smart-contract-service.ts) explicitly describes itself as a simulation. It generates:
-
-- contract addresses;
-- transaction hashes;
-- block numbers;
-- confirmation counts;
-- token balances;
-- randomized delay and success behavior.
-
-Those values are stored in application records. No deployed contract, chain client, RPC boundary, chain ID, contract source, or transaction receipt is present in the public tree.
-
-The appropriate public description is **escrow workflow simulation**.
-
-## Present but not verified end to end
-
-The Semaphore service calls the package's `generateProof` and `verifyProof` functions. That is more substantial than a random proof-shaped string.
-
-However:
-
-- no automated tests exercise identity creation, group membership, proof generation, and verification together;
-- no CI workflow runs a TypeScript or integration gate;
-- the current route call and service signature need to be reconciled before claiming the flow builds and runs;
-- identity material and persistence require an explicit security model.
-
-The appropriate label is **integration code present; end-to-end proof unverified**.
-
-## Not evidenced
-
-The public tree does not show a model provider, matching algorithm, evaluation, or training artifact that supports “AI-powered matching.” It contains match fields and values, but not evidence of an AI matching system.
-
-The appropriate label is **planned or remove the claim**.
-
-## Target architecture
+Each folio contains a versioned event journal. Forward, backward, reset, and timed replay derive state from that immutable input. A stable journal mark changes with the applied event prefix. Invalid transitions fail loudly, and replay boundaries clamp without mutating the fixtures.
 
 ```mermaid
 flowchart LR
-  Scenario[Seeded trade scenario] --> State[Deterministic trade state machine]
-  Identity[Semaphore test identity] --> Proof[Proof adapter]
-  State --> Escrow[Local-chain escrow contract]
-  Proof --> Escrow
-  Escrow --> Receipt[Chain receipt and event log]
-  Receipt --> UI[React scenario explorer]
-  State --> Replay[Replayable state transcript]
+  Folio[Versioned synthetic folio] --> Reducer[Validated replay reducer]
+  Reducer --> State[Derived exchange state]
+  Reducer --> Tape[Inspectable event tape]
+  State --> Mark[Stable journal mark]
+  State --> Desk[React clearing desk]
 ```
 
-The target deliberately separates three proofs:
+This is a proof of application-state behavior. It is not a proof of market price, title, custody, inspection, identity, payment, or legal enforceability.
 
-1. a deterministic application state transition;
-2. a verified membership or eligibility proof;
-3. a real local-chain escrow receipt.
+## The legacy workspace
 
-## Promotion gates
+The original React/Express marketplace surface remains available for architecture exploration. It now carries a global **legacy prototype** disclosure and uses deterministic in-memory fixtures when `DATABASE_URL` is absent.
 
-- Correct the README and clone path before adding features.
-- Add an explicit license file and CI workflow.
-- Make the application start from a documented seeded database.
-- Test the TypeScript build, authentication boundary, trade state machine, WebSocket path, and proof adapter.
-- Replace random transaction telemetry with a clearly named simulation adapter.
-- Add a local Anvil or Hardhat contract path only when a real receipt can be inspected.
-- Keep identity proof, KYC review, and legal compliance as separate claims.
-- Publish a threat model before accepting real identity documents or value.
+The revival also repaired concrete trust-boundary defects:
 
-## Inspect the source
+- registration cannot assign administrator or verified roles;
+- password hashes and proof secrets are excluded from responses;
+- no hardcoded administrator credential remains;
+- unauthenticated WebSocket identity claims are disabled;
+- real KYC file intake is removed—only three named synthetic fixture IDs are accepted by UI and API;
+- persistent production mode requires an explicit session secret.
 
-- [Repository](https://github.com/fortunexbt/barter)
-- [Smart-contract simulation service](https://github.com/fortunexbt/barter/blob/main/server/services/smart-contract-service.ts)
-- [Semaphore service](https://github.com/fortunexbt/barter/blob/main/server/services/zkp-service.ts)
-- [Routes and WebSocket surface](https://github.com/fortunexbt/barter/blob/main/server/routes.ts)
-- [Shared data schema](https://github.com/fortunexbt/barter/blob/main/shared/schema.ts)
+The former Semaphore dependency path was removed. The surviving identity experiment is conspicuously labeled a **non-zero-knowledge local challenge fixture**.
 
+## Reproduce it
+
+```bash
+git clone https://github.com/fortunexbt/barter.git
+cd barter
+npm ci
+npm run verify
+npm run dev
+```
+
+Open `http://localhost:5000/lab`. The lab makes no external call and never enters the authenticated legacy workspace.
+
+`npm run verify` runs TypeScript checking, four deterministic replay tests, and the production build. The CI workflow also audits production dependencies; v2.0.0 shipped with zero known production dependency vulnerabilities.
+
+## Simulation ledger
+
+| Surface | Label |
+|---|---|
+| Scenario values, participants, documents, and inspection records | Simulated fixtures |
+| Matching, counter-offer, hold, cancellation, and settlement states | Deterministic application behavior |
+| Agreement, escrow, token, and transaction-shaped records in the legacy UI | Simulated; no chain or custody adapter |
+| AI-powered matching | Not implemented |
+| Real identity verification, commodity transfer, payment, title, and logistics | Not implemented |
+
+<Warning>
+  Do not submit identity documents, wallet keys, funds, commercial records, or live counterparties to this lab. It has not been audited for custody, compliance, or production commodity trading.
+</Warning>
+
+## Next proof gates
+
+- Persist a signed append-only journal and prove replay from that artifact.
+- Introduce an inspection or identity adapter only with synthetic sandbox receipts and a threat model.
+- Add a real local-chain contract only when contract source, chain ID, transaction receipt, and failure behavior are inspectable together.
+- Keep identity proof, KYC review, legal agreement, custody, and settlement as separate claims.
+
+## Inspect the evidence
+
+- [v2.0.0 release](https://github.com/fortunexbt/barter/releases/tag/v2.0.0)
+- [Protocol lab source](https://github.com/fortunexbt/barter/blob/main/client/src/pages/protocol-lab-page.tsx)
+- [Replay engine](https://github.com/fortunexbt/barter/blob/main/client/src/features/protocol-lab/demo-engine.ts)
+- [Replay tests](https://github.com/fortunexbt/barter/blob/main/client/src/features/protocol-lab/demo-engine.test.ts)
+- [CI proof](https://github.com/fortunexbt/barter/actions/workflows/ci.yml)
+- [Capability ledger](https://github.com/fortunexbt/barter#capability-ledger)
