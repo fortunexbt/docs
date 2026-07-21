@@ -1,0 +1,23 @@
+name: Docs proof
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: python3 -m json.tool docs.json >/dev/null
+      - run: npx --yes mint@4.2.723 validate
+      - run: npx --yes mint@4.2.723 broken-links --check-anchors
+      - run: npx --yes mint@4.2.723 a11y

@@ -1,34 +1,71 @@
-> **Customize this file**: Tailor this template to your project by noting specific contribution types you're looking for, adding a Code of Conduct, or adjusting the writing guidelines to match your style.
+# Contribute to the Fortune Field Manual
 
-# Contribute to the documentation
+Contributions should make a claim easier to inspect, reproduce, or correctly limit.
 
-Thank you for your interest in contributing to our documentation! This guide will help you get started.
+Useful changes include:
 
-## How to contribute
+- correcting a source-backed architecture detail;
+- adding a smaller or more reliable demo recipe;
+- linking a claim to a release, workflow, test, or source file;
+- updating a lab boundary after code changes;
+- documenting a failure mode or unsupported environment;
+- improving navigation, accessibility, or mobile readability.
 
-### Option 1: Edit directly on GitHub
+## Evidence requirement
 
-1. Navigate to the page you want to edit
-2. Click the "Edit this file" button (the pencil icon)
-3. Make your changes and submit a pull request
+For every concrete capability change:
 
-### Option 2: Local development
+1. Link the public repository, file, release, or workflow that supports it.
+2. State whether the capability is **shipped**, **verified**, **experiment**, **simulated**, or **planned**.
+3. Include a review date when changing a lab page.
+4. Keep unsupported assumptions and external services visible.
 
-1. Fork and clone this repository
-2. Install the Mintlify CLI: `npm i -g mint`
-3. Create a branch for your changes
-4. Make changes
-5. Navigate to the docs directory and run `mint dev`
-6. Preview your changes at `http://localhost:3000`
-7. Commit your changes and submit a pull request
+If a README and implementation disagree, describe the implementation and note the mismatch. Do not silently promote roadmap text into present tense.
 
-For more details on local development, see our [development guide](development.mdx).
+## Local workflow
 
-## Writing guidelines
+1. Fork and clone the repository.
+2. Use Node.js 20.17.0 or newer.
+3. Run `npx --yes mint@4.2.723 dev` from the repository root.
+4. Edit the relevant MDX page and update `docs.json` only when navigation changes.
+5. Run the checks below before opening a pull request.
 
-- **Use active voice**: "Run the command" not "The command should be run"
-- **Address the reader directly**: Use "you" instead of "the user"
-- **Keep sentences concise**: Aim for one idea per sentence
-- **Lead with the goal**: Start instructions with what the user wants to accomplish
-- **Use consistent terminology**: Don't alternate between synonyms for the same concept
-- **Include examples**: Show, don't just tell
+```bash
+python3 -m json.tool docs.json >/dev/null
+npx --yes mint@4.2.723 validate
+npx --yes mint@4.2.723 broken-links --check-anchors
+npx --yes mint@4.2.723 a11y
+```
+
+## Writing rules
+
+- Lead with the outcome or boundary.
+- Use active voice and sentence-case headings.
+- Prefer concrete verbs over performance adjectives.
+- Put paths, commands, identifiers, and environment variables in backticks.
+- Use root-relative internal links and full external URLs.
+- Add `title` and `description` frontmatter to every MDX page.
+- Include prerequisites, expected evidence, and limits in every recipe.
+- Never include credentials, customer data, or private infrastructure details.
+
+## Visual rules
+
+Preserve the “control room after midnight” system:
+
+- signal cyan for inspectable state;
+- governance violet for control and policy;
+- warm amber for lab warnings;
+- IBM Plex Mono for headings and proof labels;
+- restrained grids, telemetry strips, and status markers.
+
+Use Mintlify components for normal documentation structure. Reuse the project classes in `style.css` for hero and evidence treatments instead of introducing one-off visual patterns.
+
+## Pull request checklist
+
+- [ ] Every new page is present in `docs.json` or intentionally unlisted.
+- [ ] Internal links resolve.
+- [ ] External claims link to primary evidence.
+- [ ] Implemented, simulated, and planned behavior remain distinct.
+- [ ] Commands are safe to copy and use realistic values.
+- [ ] Images and diagrams have useful text alternatives or surrounding explanation.
+- [ ] JSON, Mintlify validation, broken-link, and accessibility checks pass—or skipped checks are explained.

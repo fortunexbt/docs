@@ -1,43 +1,65 @@
-# Mintlify Starter Kit
+# Fortune Field Manual
 
-Use the starter kit to get your docs deployed and ready to customize.
+Architecture tours, reproducible demos, and release evidence for **systems that show their work**.
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+The Field Manual is the technical depth layer behind Fortune's public projects. It documents what the code does, where the trust boundary sits, how to reproduce the flagship claim, and what remains experimental.
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+## What is inside
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+| Section | Purpose |
+|---|---|
+| `architecture/` | Tours of MUTX, Tablebeam, Terminal Starfield, and ckitty |
+| `principles/` | Bounded, local, deterministic, and verifiable design |
+| `recipes/` | Secret-minimal demos with stable inputs and inspectable evidence |
+| `proof/` | Build and release proof philosophy |
+| `labs/` | Dated implemented-versus-simulated ledgers for Barter and SecurePath |
 
-## Development
+The site uses the Mintlify `linden` theme with a project-specific “control room after midnight” visual system in `docs.json`, `style.css`, and the custom SVG assets.
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+## Status vocabulary
 
+- **Shipped** — a release or public use path exists.
+- **Verified** — a reproducible check or inspectable artifact backs the claim.
+- **Experiment** — real code operates inside a deliberately limited envelope.
+- **Simulated** — behavior is mocked or emulated rather than connected to the named external system.
+- **Planned** — the direction is explicit and not implemented.
+
+These terms are editorial constraints. Do not replace them with broader marketing language.
+
+## Preview locally
+
+Mintlify requires Node.js 20.17.0 or newer. The commands pin the CLI version used by CI.
+
+```bash
+npx --yes mint@4.2.723 dev
 ```
-npm i -g mint
+
+The preview opens at `http://localhost:3000`.
+
+## Validate
+
+```bash
+python3 -m json.tool docs.json >/dev/null
+npx --yes mint@4.2.723 validate
+npx --yes mint@4.2.723 broken-links --check-anchors
+npx --yes mint@4.2.723 a11y
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+The same proof gate runs in GitHub Actions on every pull request and push to `main`.
 
-```
-mint dev
-```
+The repository-specific editorial and design rules live in [`AGENTS.md`](AGENTS.md). Contribution requirements live in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-View your local preview at `http://localhost:3000`.
+## Primary evidence
 
-## Publishing changes
+- [MUTX](https://github.com/mutx-dev/mutx-dev)
+- [Tablebeam](https://github.com/fortunexbt/tablebeam)
+- [Terminal Starfield](https://github.com/fortunexbt/terminal-starfield)
+- [ckitty](https://github.com/fortunexbt/ckitty)
+- [Barter](https://github.com/fortunexbt/barter)
+- [SecurePath](https://github.com/fortunexbt/securepath)
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+Lab status was reviewed against public default branches on 21 July 2026. Update the date whenever the implementation boundary changes.
 
-## Need help?
+## License
 
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+The documentation repository is licensed under the terms in [`LICENSE`](LICENSE). Linked projects retain their own licenses.

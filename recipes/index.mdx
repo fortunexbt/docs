@@ -1,0 +1,53 @@
+---
+title: "Demo recipes"
+description: "Small, reproducible demonstrations that prove one capability without hiding setup or network boundaries."
+icon: "play"
+---
+
+A useful demo has a narrow claim. It names its prerequisites, uses an inspectable input, produces visible evidence, and states what remains unproven.
+
+## Recipe contract
+
+Every recipe in this manual follows the same sequence:
+
+<Steps>
+  <Step title="Name the claim">
+    Decide exactly what the run should demonstrate. “It works” is not specific enough.
+  </Step>
+  <Step title="Declare the boundary">
+    Identify required accounts, providers, downloads, credentials, and network calls before running anything.
+  </Step>
+  <Step title="Use a stable input">
+    Prefer bundled sample data, a deterministic seed, or an explicit health check.
+  </Step>
+  <Step title="Capture evidence">
+    Keep the source rows, state snapshot, byte comparison, test output, or health report that supports the claim.
+  </Step>
+  <Step title="Record what it did not prove">
+    A local success does not establish production security, scale, or compatibility with an untested environment.
+  </Step>
+</Steps>
+
+## Choose a demo
+
+| Recipe | Claim | External dependency | Evidence |
+|---|---|---|---|
+| [MUTX operator setup](/recipes/mutx-operator-loop) | The CLI can configure a documented topology and inspect health | Homebrew plus hosted account or Docker | `mutx doctor` and operator surface |
+| [Tablebeam source trail](/recipes/tablebeam-source-trail) | A local model answer exposes the rows selected as context | LM Studio or Ollama | Answer plus source rows |
+| [Starfield seeded run](/recipes/starfield-seeded-run) | One seed produces a repeatable fixed frame | Python 3.9+ | Byte-identical snapshots and state |
+| [ckitty deterministic frame](/recipes/ckitty-deterministic-frame) | The native renderer repeats a specified kitty | C compiler and ncurses | Byte-identical dumps and tests |
+
+<Tip>
+  Run showcase recipes in a disposable checkout. Never substitute production credentials or customer data for a bundled fixture.
+</Tip>
+
+## What these demos do not certify
+
+- independent security review;
+- performance under production load;
+- behavior outside the documented platform range;
+- correctness of an external model or provider;
+- future roadmap capabilities.
+
+The [build and release proof](/proof/build-and-release) page explains how a demo becomes one part of a broader evidence bundle.
+
