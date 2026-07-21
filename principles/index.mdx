@@ -1,0 +1,95 @@
+---
+title: "Design principles"
+description: "Bounded, local, deterministic, and verifiable systems as practical engineering constraints."
+icon: "scan-line"
+---
+
+These principles are not a maturity score. They are design pressures. A project may lean heavily on one and only partially satisfy another.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Purpose</span>
+    <span className="fm-proof-value">Make authority, data flow, state, and evidence inspectable</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Test</span>
+    <span className="fm-proof-value">A reviewer can locate the boundary in code or output</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Failure mode</span>
+    <span className="fm-proof-value">Narrative outruns implementation</span>
+  </div>
+</div>
+
+## Bounded
+
+A bounded system says what an actor can do, for how long, with which resources, and under whose approval.
+
+MUTX makes this principle explicit through identity, permissions, session budgets, policy enforcement, review gates, and audit history. Tablebeam applies the same instinct at smaller scale: it caps the context sent to a model and keeps retrieval logic separate from generation.
+
+Ask four questions:
+
+1. What grants authority?
+2. What constrains time, cost, data, or tool access?
+3. What happens when a limit is reached?
+4. Who can reconstruct the decision afterward?
+
+## Local
+
+Local-first is a data-flow claim, not a decorative privacy badge.
+
+Tablebeam processes CSV data on the configured machine and targets a local OpenAI-compatible server by default. It also names the two network boundaries: fetching a public Google Sheet and contacting whichever model endpoint the operator selected.
+
+A useful local-first page should identify:
+
+- what remains on the machine;
+- which action creates network traffic;
+- which external service can retain data;
+- whether software or model downloads happen automatically.
+
+## Deterministic
+
+Determinism turns a visual or interactive system into something testable.
+
+Terminal Starfield accepts seeds and emits fixed viewport snapshots and machine-readable state. ckitty can render a specific pose, frame, width, height, and seed without starting ncurses. Both projects separate state generation from terminal presentation.
+
+Determinism is especially valuable for:
+
+- regression tests;
+- honest demo capture;
+- bug reports with a replay key;
+- comparing renderers against the same state;
+- automation that should not depend on a human watching a terminal.
+
+## Verifiable
+
+Verifiability connects an output to the material that supports it.
+
+Tablebeam places the retrieved source rows beside its answer. MUTX records operational state and audit history. Starfield and ckitty expose deterministic outputs. Each approach answers a different version of the same question: **what can another person inspect after the system speaks or acts?**
+
+Verification is weaker when it relies on:
+
+- an unexplained badge;
+- a screenshot with no reproduction path;
+- an AI answer without retrieved evidence;
+- a transaction-shaped string with no chain receipt;
+- a roadmap item written in present tense.
+
+## Project matrix
+
+| System | Bounded | Local | Deterministic | Verifiable |
+|---|---|---|---|---|
+| MUTX | Permissions, budgets, approvals, policy | Local and hosted setup paths | Test isolation and explicit run state | Runs, health, observability, audit surfaces |
+| Tablebeam | Selected rows constrain model context | Local provider is the default | Validation and lexical retrieval | Source rows displayed with answers |
+| Terminal Starfield | Explicit modes and terminal limits | Zero runtime dependencies | Seeded simulation and snapshots | Tests plus machine-readable state |
+| ckitty | Small native runtime and resize bounds | Runs entirely in the terminal | Seeded renderer and fixed frames | Core, CLI, resize, and sanitizer checks |
+| Barter lab | Session and workflow boundaries exist | Database-backed web application | Randomness currently blocks replay | Semaphore proof code exists; chain behavior is simulated |
+| SecurePath lab | Rate and usage controls exist | External model APIs are required | No offline replay fixture yet | Citations exist on one provider path; evals are absent |
+
+## The practical rule
+
+When a system cannot satisfy a principle yet, label the gap. A visible boundary is more credible than an invisible ambition.
+
+<Card title="See the proof discipline" icon="git-commit-horizontal" href="/proof/build-and-release" horizontal>
+  Turn these principles into build, demo, and release evidence.
+</Card>

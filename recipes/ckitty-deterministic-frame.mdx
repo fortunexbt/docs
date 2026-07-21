@@ -1,0 +1,93 @@
+---
+title: "Recipe: prove a kitty repeats"
+description: "Build ckitty, render one seeded frame twice, compare it byte for byte, and run native verification."
+icon: "repeat-2"
+---
+
+**Claim:** ckitty's core renderer reproduces a specified pose and seed without initializing ncurses.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Input</span>
+    <span className="fm-proof-value">Pose `sit` · seed 123</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Path</span>
+    <span className="fm-proof-value">Plain stdout through `--dump`</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Evidence</span>
+    <span className="fm-proof-value">Byte comparison, core tests, CLI tests, resize test</span>
+  </div>
+</div>
+
+## Prerequisites
+
+- Git;
+- a C11 compiler;
+- ncurses development headers and `libm`;
+- Python 3 for the resize test.
+
+On Debian or Ubuntu, install `libncurses-dev`. Fedora packages it as `ncurses-devel`. On macOS, the Makefile can discover Homebrew's ncurses installation.
+
+## 1. Build one binary
+
+```bash
+git clone https://github.com/fortunexbt/ckitty.git
+cd ckitty
+make
+```
+
+## 2. Render the same kitty twice
+
+```bash
+ckitty_capture_dir="$(mktemp -d)"
+
+./ckitty --dump --seed 123 sit > "$ckitty_capture_dir/kitty-a.txt"
+./ckitty --dump --seed 123 sit > "$ckitty_capture_dir/kitty-b.txt"
+
+cmp "$ckitty_capture_dir/kitty-a.txt" "$ckitty_capture_dir/kitty-b.txt"
+```
+
+`--dump` writes a clean frame to standard output without starting ncurses. `cmp` exits successfully when the renderings match byte for byte.
+
+## 3. Exercise the native checks
+
+```bash
+make check
+```
+
+This target covers the renderer core, CLI behavior, and terminal resize handling.
+
+If your compiler supports AddressSanitizer and UndefinedBehaviorSanitizer:
+
+```bash
+make sanitize
+```
+
+## 4. Meet the interactive kitty
+
+```bash
+./ckitty
+```
+
+Press <kbd>Space</kbd> to change pose, <kbd>N</kbd> for a new kitty, and <kbd>Q</kbd> to exit.
+
+## Expected evidence
+
+- the two dump files match exactly;
+- `make check` exercises core, CLI, and resize paths;
+- the interactive application restores the terminal on normal exit;
+- a small terminal receives a resize message rather than corrupted art.
+
+## This recipe does not prove
+
+- identical interactive timing;
+- sanitizer availability on every toolchain;
+- packaging compatibility beyond the documented macOS and Linux boundary.
+
+Remove the temporary captures when finished:
+
+```bash
+rm -r "$ckitty_capture_dir"
+```

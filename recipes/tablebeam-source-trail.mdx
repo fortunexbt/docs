@@ -1,0 +1,93 @@
+---
+title: "Recipe: trace a Tablebeam answer"
+description: "Run the bundled customer dataset through a local model and inspect the exact rows selected as evidence."
+icon: "list-tree"
+---
+
+**Claim:** Tablebeam keeps deterministic row retrieval inspectable beside a generated answer.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Input</span>
+    <span className="fm-proof-value">Bundled `sample_data.csv`</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Model boundary</span>
+    <span className="fm-proof-value">LM Studio or Ollama on the configured machine</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Evidence</span>
+    <span className="fm-proof-value">Answer, source identifiers, and expanded source rows</span>
+  </div>
+</div>
+
+## Prerequisites
+
+- Python 3.10 or newer;
+- Git;
+- LM Studio with a chat model loaded, or Ollama with a local model.
+
+## 1. Start a local provider
+
+In LM Studio, open **Developer → Local Server** and start the server.
+
+For Ollama:
+
+```bash
+ollama serve
+ollama pull llama3.2
+```
+
+Model download size and license depend on the model you choose. Tablebeam does not initiate that download itself.
+
+## 2. Launch the bundled demo
+
+```bash
+git clone https://github.com/fortunexbt/tablebeam.git
+cd tablebeam
+./start.sh --demo
+```
+
+For Ollama, use:
+
+```bash
+./start.sh --ollama --demo
+```
+
+The launcher creates a virtual environment, installs the application dependencies when needed, and opens the Streamlit workbench at `http://localhost:8501`.
+
+## 3. Ask a traceable question
+
+The bundled dataset contains account owner, status, revenue, health score, contact date, and notes. Ask:
+
+> Which at-risk accounts need follow-up first? Cite the source row for each recommendation.
+
+Do not grade the demo only on fluent prose. Expand the source sections and compare company, status, health score, and notes with `sample_data.csv`.
+
+## 4. Verify the deterministic half
+
+```bash
+pytest -q
+python -m py_compile src/*.py
+bash -n start.sh
+```
+
+These checks use fake provider responses. They can test ingestion, retrieval, and provider-control behavior without treating a live model call as a unit test.
+
+## Expected evidence
+
+- Tablebeam profiles the sample dataset;
+- the answer includes source identifiers;
+- expanding those sources reveals real rows from the bundled CSV;
+- the cited rows support—or visibly fail to support—the prose;
+- tests run without a model download or external API key.
+
+## This recipe does not prove
+
+- that the model's recommendation is correct;
+- that exact aggregation and joins replace SQL or dataframe work;
+- that a non-local endpoint preserves privacy;
+- that a public Google Sheet avoids a network request.
+
+Stop the Streamlit process with <kbd>Ctrl</kbd> + <kbd>C</kbd> when finished.
+

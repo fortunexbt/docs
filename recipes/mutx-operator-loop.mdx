@@ -1,0 +1,94 @@
+---
+title: "Recipe: inspect a MUTX topology"
+description: "Install the documented MUTX CLI, select hosted or local setup, and capture a health report."
+icon: "activity"
+---
+
+**Claim:** the public CLI can configure one of the documented operating topologies and expose a health check to the operator.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Input</span>
+    <span className="fm-proof-value">Hosted account or local Docker runtime</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Action</span>
+    <span className="fm-proof-value">Install, configure, run doctor</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Evidence</span>
+    <span className="fm-proof-value">CLI health report plus reachable operator surface</span>
+  </div>
+</div>
+
+## Prerequisites
+
+- macOS with Homebrew for the documented CLI install path;
+- a MUTX account for hosted setup, or Docker for local setup;
+- permission to create local configuration on the machine.
+
+## 1. Install the CLI
+
+```bash
+brew tap mutx-dev/homebrew-tap
+brew install mutx
+mutx --help
+```
+
+The help output establishes that the installed command resolves. It does not establish service health.
+
+## 2. Choose one topology
+
+Hosted is the documented default:
+
+```bash
+mutx setup hosted
+```
+
+For a Docker-backed local stack, run this instead:
+
+```bash
+mutx setup local
+```
+
+Do not run both paths simply to make the demo look larger. The point is to observe one explicit topology.
+
+## 3. Inspect health
+
+```bash
+mutx doctor
+```
+
+Keep the report with secrets removed. A useful capture identifies the selected topology and which required services or credentials passed or failed.
+
+## 4. Inspect the human surface
+
+For hosted setup, open the authenticated dashboard linked by the product. For local setup, the public repository documents the following development surfaces:
+
+| URL | Surface |
+|---|---|
+| `http://localhost:3000` | Landing site |
+| `http://localhost:3000/dashboard` | Operator dashboard |
+| `http://localhost:8000` | Control-plane API |
+| `http://localhost:8000/docs` | Swagger UI |
+
+Those local URLs describe the development stack. A CLI-managed local deployment may expose surfaces differently; follow the current [MUTX documentation](https://docs.mutx.dev) when they differ.
+
+## Expected evidence
+
+- `mutx --help` resolves from the installed package;
+- setup names the selected operating mode;
+- `mutx doctor` reports concrete checks rather than a generic success message;
+- the matching operator surface is reachable.
+
+## This recipe does not prove
+
+- that an agent has been deployed or governed;
+- that RBAC, OIDC, budgets, or approval gates were exercised;
+- that a hosted or local environment passed security review;
+- that every infrastructure target is healthy.
+
+<Info>
+  Continue with the product's own run and policy guides for a full operator workflow. This manual does not invent commands that are absent from the public quickstart.
+</Info>
+

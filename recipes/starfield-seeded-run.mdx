@@ -1,0 +1,96 @@
+---
+title: "Recipe: replay a seeded starfield"
+description: "Generate byte-identical terminal frames from one Starfield seed and inspect machine-readable game state."
+icon: "binary"
+---
+
+**Claim:** a fixed Starfield seed and viewport produce a repeatable rendered frame and inspectable state.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Input</span>
+    <span className="fm-proof-value">Seed 42 · viewport 80×24 · ASCII · no color</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Comparison</span>
+    <span className="fm-proof-value">Two independent snapshot commands</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Evidence</span>
+    <span className="fm-proof-value">`cmp` success plus state-snapshot output</span>
+  </div>
+</div>
+
+## Prerequisites
+
+- Python 3.9 or newer;
+- Git;
+- a macOS or Linux shell, or Windows through WSL.
+
+## 1. Clone the game
+
+```bash
+git clone https://github.com/fortunexbt/terminal-starfield.git
+cd terminal-starfield
+```
+
+No package installation is required for the checkout entry point.
+
+## 2. Capture the same universe twice
+
+```bash
+starfield_capture_dir="$(mktemp -d)"
+
+python3 starfield.py --snapshot 80x24 --seed 42 --no-color --ascii \
+  > "$starfield_capture_dir/frame-a.txt"
+python3 starfield.py --snapshot 80x24 --seed 42 --no-color --ascii \
+  > "$starfield_capture_dir/frame-b.txt"
+
+cmp "$starfield_capture_dir/frame-a.txt" "$starfield_capture_dir/frame-b.txt"
+```
+
+`cmp` prints nothing and exits successfully when the files are identical.
+
+## 3. Inspect the state surface
+
+```bash
+python3 starfield.py --state-snapshot --seed 42
+```
+
+This command is intended for automation. It exposes live game state without requiring a human to infer state from ANSI pixels.
+
+## 4. Run the campaign checks
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+The suite exercises campaign progression, bosses, weapons, upgrades, viewport sizing, and output handling.
+
+## 5. Enter the interactive path
+
+```bash
+python3 starfield.py
+```
+
+The interactive run adds timing and human input. It is more expressive and less constrained than the fixed snapshot proof.
+
+## Expected evidence
+
+- both 80×24 captures are byte-identical;
+- output contains no color escape dependency in the selected compatibility mode;
+- state snapshot output is readable by automation;
+- the unit suite covers a complete campaign path.
+
+## This recipe does not prove
+
+- identical timing under live keyboard input;
+- performance across every terminal emulator;
+- that seed 42 covers the entire game state space.
+
+Remove the temporary capture directory when you no longer need the evidence:
+
+```bash
+rm -r "$starfield_capture_dir"
+```
+
