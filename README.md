@@ -1,5 +1,8 @@
 # Fortune Field Manual
 
+[![Docs proof](https://github.com/fortunexbt/docs/actions/workflows/docs.yml/badge.svg)](https://github.com/fortunexbt/docs/actions/workflows/docs.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-48EEFF.svg)](LICENSE)
+
 Architecture tours, reproducible demos, and release evidence for **systems that show their work**.
 
 The Field Manual is the technical depth layer behind Fortune's public projects. It documents what the code does, where the trust boundary sits, how to reproduce the flagship claim, and what remains experimental.
