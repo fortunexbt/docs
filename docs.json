@@ -1,68 +1,116 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "linden",
+  "name": "Fortune Field Manual",
+  "description": "Architecture tours, reproducible demos, and release evidence for systems that show their work.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#075985",
+    "light": "#48EEFF",
+    "dark": "#9C6CFF"
+  },
+  "appearance": {
+    "default": "dark",
+    "strict": false
+  },
+  "fonts": {
+    "family": "IBM Plex Sans",
+    "weight": 400,
+    "heading": {
+      "family": "IBM Plex Mono",
+      "weight": 600
+    },
+    "body": {
+      "family": "IBM Plex Sans",
+      "weight": 400
+    }
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "background": {
+    "decoration": "grid",
+    "color": {
+      "light": "#F4F7F6",
+      "dark": "#09080B"
+    }
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": {
+      "theme": {
+        "light": "github-light",
+        "dark": "vitesse-dark"
+      }
+    }
   },
   "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "/"
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Field manual",
+        "icon": "radar",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Start",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "start-here"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Architecture tours",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "architecture/mutx",
+              "architecture/tablebeam",
+              "architecture/terminal-starfield",
+              "architecture/ckitty"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Design principles",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "principles/index"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Demo recipes",
+        "icon": "play",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Reproduce the claim",
             "pages": [
-              "api-reference/introduction"
+              "recipes/index",
+              "recipes/mutx-operator-loop",
+              "recipes/tablebeam-source-trail",
+              "recipes/starfield-seeded-run",
+              "recipes/ckitty-deterministic-frame"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Proof & labs",
+        "icon": "shield-check",
+        "groups": [
+          {
+            "group": "Proof discipline",
+            "pages": [
+              "proof/build-and-release"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Labs",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "labs/status",
+              "labs/barter",
+              "labs/securepath"
             ]
           }
         ]
@@ -71,52 +119,76 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "GitHub",
+          "href": "https://github.com/fortunexbt",
+          "icon": "github"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "MUTX",
+          "href": "https://mutx.dev",
+          "icon": "activity"
         }
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
+  "redirects": [
+    {
+      "source": "/quickstart",
+      "destination": "/start-here"
+    },
+    {
+      "source": "/development",
+      "destination": "/start-here"
+    },
+    {
+      "source": "/essentials/:slug*",
+      "destination": "/principles"
+    },
+    {
+      "source": "/ai-tools/:slug*",
+      "destination": "/start-here"
+    },
+    {
+      "source": "/api-reference/:slug*",
+      "destination": "/architecture/mutx"
+    }
+  ],
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "type": "github",
+        "href": "https://github.com/fortunexbt"
+      },
+      {
+        "label": "Portfolio",
+        "href": "https://fortunexbt.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Run MUTX",
+      "href": "https://mutx.dev"
     }
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude"
+    ]
+  },
+  "thumbnails": {
+    "appearance": "dark",
+    "background": "/images/field-grid.svg",
+    "fonts": {
+      "family": "IBM Plex Mono"
+    }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/fortunexbt",
+      "x": "https://x.com/fortunexbt"
     }
   }
 }

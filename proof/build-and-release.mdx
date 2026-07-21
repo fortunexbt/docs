@@ -1,0 +1,125 @@
+---
+title: "Build and release proof"
+description: "A practical evidence bundle for claims that should survive beyond a demo."
+icon: "shield-check"
+---
+
+A release is a claim about a specific revision, platform envelope, artifact, and behavior. Proof is the chain that lets another person inspect that claim.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Unit</span>
+    <span className="fm-proof-value">One revision and its declared platform matrix</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Output</span>
+    <span className="fm-proof-value">Checks, artifact identity, demo evidence, and known limits</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Reader test</span>
+    <span className="fm-proof-value">Can someone reproduce or inspect the result?</span>
+  </div>
+</div>
+
+## The proof bundle
+
+<Steps>
+  <Step title="Identify the revision">
+    Record the repository, commit, tag, build environment, and declared platform matrix. “Latest” is not a stable identifier.
+  </Step>
+  <Step title="Build from the documented path">
+    Use the same package definition or build script presented to users. Record generated artifacts and their hashes when distribution matters.
+  </Step>
+  <Step title="Run layered checks">
+    Keep compilation, static analysis, unit tests, integration tests, end-to-end checks, and security tooling separate. One green command should not conceal which layers were skipped.
+  </Step>
+  <Step title="Reproduce the visible claim">
+    Capture a seeded frame, source-row trail, health report, or operator flow from the built revision.
+  </Step>
+  <Step title="Publish boundaries with the release">
+    State required services, unsupported platforms, simulated components, data paths, security assumptions, and rollback instructions.
+  </Step>
+</Steps>
+
+## Evidence, not badge theater
+
+| Weak signal | Stronger evidence |
+|---|---|
+| “Tests passing” badge | Named workflow, matrix, commands, and logs tied to the release commit |
+| Screenshot | Capture recipe plus source revision and deterministic fixture where possible |
+| “Private” badge | Explicit data-flow diagram and network boundaries |
+| “Onchain” label | Contract address, chain, transaction receipt, verification source, and threat model |
+| “AI-powered” label | Provider boundary, prompt/input contract, fixtures, eval method, and failure cases |
+| “Production-ready” | Supported topology, operations runbook, monitoring, backup, restore, and incident boundary |
+
+## A proposed machine-readable receipt
+
+The following is a **proposal**, not a proof format already emitted by every repository. It illustrates the minimum facts a public showcase could aggregate.
+
+```json proof.json
+{
+  "schema": "https://fortunexbt.com/proof/v1",
+  "repository": "fortunexbt/terminal-starfield",
+  "revision": "v3.0.0",
+  "status": "shipped",
+  "platforms": ["macos", "linux"],
+  "checks": [
+    {
+      "name": "unit",
+      "command": "python3 -m unittest discover -s tests -v"
+    },
+    {
+      "name": "seeded-frame",
+      "command": "python3 starfield.py --snapshot 80x24 --seed 42 --no-color --ascii"
+    }
+  ],
+  "artifacts": [],
+  "boundaries": [
+    "Python 3.9 or newer",
+    "modern macOS or Linux terminal; Windows through WSL"
+  ]
+}
+```
+
+The receipt should point to immutable logs or artifacts when automation generates them. A self-authored JSON file is an index to evidence, not evidence by itself.
+
+## Project proof map
+
+| Project | Strongest current proof | Missing or expanding proof |
+|---|---|---|
+| MUTX | Releases, layered CI, CLI health, browser tests, signed macOS distribution | Public end-to-end operator receipt with redacted run/audit evidence |
+| Tablebeam | Fake-provider tests and visible source rows | Versioned release and stable UI capture from a known dataset |
+| Terminal Starfield | v3 release, seeded snapshots, state output, full campaign tests | Packaged install artifact and remote-play smoke test if that surface ships |
+| ckitty | Deterministic dump, native tests, PTY resize test, sanitizers | Versioned binaries/package formula and artifact checksums |
+| Barter lab | Inspectable UI/API/proof experiment source | Deterministic state, integration tests, real chain receipts, CI, honest release boundary |
+| SecurePath lab | Inspectable provider and Discord integration source | Offline fixtures, citations eval, tests, CI, modular packaging |
+
+## Release gate
+
+Before attaching **shipped** to a surface, answer yes to each applicable question:
+
+- Is the revision immutable or tagged?
+- Does a clean environment build through the public path?
+- Are required tests named and visible?
+- Can the flagship claim be reproduced from a fixture or documented account path?
+- Are external services and data paths explicit?
+- Are simulated components labeled beside the feature?
+- Does the license match the distribution claim?
+- Can an operator remove, stop, roll back, or recover the system?
+- Does the release state known limits without burying them?
+
+<Warning>
+  A fast-moving project can ship often without calling every commit a release. Preserve the difference between development activity and a supported artifact.
+</Warning>
+
+## The public proof surface
+
+A strong repository should let a reader move through four layers:
+
+1. **Ten seconds:** outcome, real visual, and maturity label.
+2. **One minute:** one-click, one-command, or seeded demo.
+3. **Five minutes:** architecture, boundaries, checks, and release identity.
+4. **Contributor depth:** source layout, development setup, roadmap, and issue path.
+
+The Field Manual occupies the third layer. It should never make the first layer louder by making the evidence quieter.
+

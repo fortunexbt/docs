@@ -1,97 +1,87 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Fortune Field Manual"
+description: "Architecture tours, reproducible demos, and release evidence for systems that show their work."
+icon: "radar"
 ---
 
-## Setting up
+<div className="fm-hero">
+  <div className="fm-kicker">FORTUNE // OPERATING NOTES 01</div>
+  <p className="fm-hero-copy">
+    Control planes for machines. Local tools for people. Tiny terminal worlds with
+    reproducible state. This manual records what the systems do, where their
+    boundaries sit, and how you can check the claim yourself.
+  </p>
+  <div className="fm-signal-row">
+    <span className="fm-status">bounded</span>
+    <span className="fm-status">local</span>
+    <span className="fm-status">deterministic</span>
+    <span className="fm-status">verifiable</span>
+  </div>
+</div>
 
-Get your documentation site up and running in minutes.
+## Four systems, one discipline
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
+The projects differ in scale and temperament. Their useful common ground is an insistence on visible state, explicit boundaries, and evidence that survives the demo.
 
 <Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
+  <Card title="MUTX" icon="orbit" href="/architecture/mutx">
+    A control plane around AI agents: identity, runs, permissions, budgets,
+    approvals, observability, and audit history.
   </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
+  <Card title="Tablebeam" icon="table-2" href="/architecture/tablebeam">
+    Private-by-default table Q&A that keeps deterministic retrieval separate from
+    generated answers and exposes the source rows.
   </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
+  <Card title="Terminal Starfield" icon="gamepad-2" href="/architecture/terminal-starfield">
+    A zero-dependency combat roguelite whose seeded simulation can emit both
+    terminal frames and machine-readable state.
   </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
+  <Card title="ckitty" icon="cat" href="/architecture/ckitty">
+    A native C11 terminal companion with a deterministic renderer, resize-safe UI,
+    tests, and sanitizer checks.
   </Card>
 </Columns>
+## Read the manual in layers
 
-## Need inspiration?
+<Steps>
+  <Step title="Inspect the architecture">
+    See the operating surface, the trust boundary, and the exact verification hooks for each system.
+  </Step>
+  <Step title="Run the smallest honest demo">
+    Follow recipes designed to work with seeded data, local providers, or a documented install path.
+  </Step>
+  <Step title="Read the proof ledger">
+    Learn which evidence belongs in a build, release, or public capability claim.
+  </Step>
+  <Step title="Enter the labs carefully">
+    Barter and SecurePath are documented with implemented, simulated, and planned behavior kept separate.
+  </Step>
+</Steps>
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+## Evidence ledger
+
+| Label | It means | It does not mean |
+|---|---|---|
+| **Shipped** | A release or public use path exists | Every possible deployment is supported |
+| **Verified** | A reproducible check or inspectable artifact backs the claim | A badge passed once |
+| **Experiment** | Real code operates inside a deliberately limited envelope | Production-ready |
+| **Simulated** | The behavior is mocked or emulated on purpose | Connected to the named external system |
+| **Planned** | The direction is explicit and not implemented | “Almost done” |
+
+<Note>
+  Architecture and lab claims were reviewed against the public repositories on **21 July 2026**. Product-specific documentation remains the authority for current installation and API details.
+</Note>
+
+## Choose a route
+
+<Columns cols={3}>
+  <Card title="Architecture" icon="network" href="/architecture/mutx">
+    Follow data, control, and evidence through each system.
+  </Card>
+  <Card title="Demo recipes" icon="terminal" href="/recipes/index">
+    Reproduce one meaningful claim at a time.
+  </Card>
+  <Card title="Proof & labs" icon="shield-check" href="/proof/build-and-release">
+    Separate release evidence from roadmap language.
+  </Card>
+</Columns>
