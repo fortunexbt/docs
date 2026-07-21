@@ -15,7 +15,7 @@ The Field Manual is the technical depth layer behind Fortune's public projects. 
 | `principles/` | Bounded, local, deterministic, and verifiable design |
 | `recipes/` | Secret-minimal demos with stable inputs and inspectable evidence |
 | `proof/` | Build and release proof philosophy |
-| `labs/` | Dated implemented-versus-simulated ledgers for Barter and SecurePath |
+| `labs/` | Dated implementation, simulation, and promotion-status ledgers |
 
 The site uses the Mintlify `linden` theme with a project-specific “control room after midnight” visual system in `docs.json`, `style.css`, and the custom SVG assets.
 
@@ -59,9 +59,8 @@ The repository-specific editorial and design rules live in [`AGENTS.md`](AGENTS.
 - [Terminal Starfield](https://github.com/fortunexbt/terminal-starfield)
 - [ckitty](https://github.com/fortunexbt/ckitty)
 - [Barter](https://github.com/fortunexbt/barter)
-- [SecurePath](https://github.com/fortunexbt/securepath)
 
-Lab status was reviewed against public default branches on 21 July 2026. Update the date whenever the implementation boundary changes.
+Lab status was reviewed against public default branches on 22 July 2026. Update the date whenever the implementation boundary changes.
 
 ## License
 
