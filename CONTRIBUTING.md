@@ -1,4 +1,4 @@
-# Contribute to the Fortune Field Manual
+# Contribute to the Field Manual
 
 Contributions should make a claim easier to inspect, reproduce, or correctly limit.
 
@@ -7,7 +7,7 @@ Useful changes include:
 - correcting a source-backed architecture detail;
 - adding a smaller or more reliable demo recipe;
 - linking a claim to a release, workflow, test, or source file;
-- updating a lab boundary after code changes;
+- updating a project's status or limits after code changes;
 - documenting a failure mode or unsupported environment;
 - improving navigation, accessibility, or mobile readability.
 
@@ -17,7 +17,7 @@ For every concrete capability change:
 
 1. Link the public repository, file, release, or workflow that supports it.
 2. State whether the capability is **shipped**, **verified**, **experiment**, **simulated**, or **planned**.
-3. Include a review date when changing a lab page.
+3. Update the review date on the page and in `status.mdx`.
 4. Keep unsupported assumptions and external services visible.
 
 If a README and implementation disagree, describe the implementation and note the mismatch. Do not silently promote roadmap text into present tense.
@@ -50,15 +50,7 @@ npx --yes mint@4.2.723 a11y
 
 ## Visual rules
 
-Preserve the “control room after midnight” system:
-
-- signal cyan for inspectable state;
-- governance violet for control and policy;
-- warm amber for lab warnings;
-- IBM Plex Mono for headings and proof labels;
-- restrained grids, telemetry strips, and status markers.
-
-Use Mintlify components for normal documentation structure. Reuse the project classes in `style.css` for hero and evidence treatments instead of introducing one-off visual patterns.
+Reuse the evidence-strip classes in `style.css` instead of adding one-off visual patterns. Use Mintlify components for normal documentation structure.
 
 ## Pull request checklist
 
@@ -68,4 +60,4 @@ Use Mintlify components for normal documentation structure. Reuse the project cl
 - [ ] Implemented, simulated, and planned behavior remain distinct.
 - [ ] Commands are safe to copy and use realistic values.
 - [ ] Images and diagrams have useful text alternatives or surrounding explanation.
-- [ ] JSON, Mintlify validation, broken-link, and accessibility checks pass—or skipped checks are explained.
+- [ ] JSON, Mintlify validation, broken-link, and accessibility checks pass, or skipped checks are explained.

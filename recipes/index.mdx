@@ -1,6 +1,6 @@
 ---
-title: "Demo recipes"
-description: "Small, reproducible demonstrations that prove one capability without hiding setup or network boundaries."
+title: "Recipes"
+description: "Step-by-step reproductions of one published claim each, with prerequisites, expected output and limits."
 icon: "play"
 ---
 
@@ -28,14 +28,15 @@ Every recipe in this manual follows the same sequence:
   </Step>
 </Steps>
 
-## Choose a demo
+## Choose a recipe
 
-| Recipe | Claim | External dependency | Evidence |
+| Recipe | Claim | Needs | Evidence |
 |---|---|---|---|
-| [MUTX operator setup](/recipes/mutx-operator-loop) | The CLI can configure a documented topology and inspect health | Homebrew plus hosted account or Docker | `mutx doctor` and operator surface |
-| [Tablebeam source trail](/recipes/tablebeam-source-trail) | A local model answer exposes the rows selected as context | LM Studio or Ollama | Answer plus source rows |
-| [Starfield seeded run](/recipes/starfield-seeded-run) | One seed produces a repeatable fixed frame | Python 3.9+ | Byte-identical snapshots and state |
-| [ckitty deterministic frame](/recipes/ckitty-deterministic-frame) | The native renderer repeats a specified kitty | C compiler and ncurses | Byte-identical dumps and tests |
+| [Rerun the Tablebeam evaluation](/recipes/tablebeam-exact-answers) | Tablebeam's silent-wrong rates against pandas, SQLite and DuckDB reproduce from pinned inputs | Python 3.12, no network after install | Result files byte-identical to the committed ones |
+| [Rebuild the BoundaryBench report](/recipes/boundary-bench-report) | The committed Claude Code traces score to the published table, including 5 of 5 budget-cap breaches | Node.js, no agent runs or API calls | Report table and per-trace `evaluate` exit codes |
+| [Run the MUTX API locally](/recipes/mutx-operator-loop) | A fresh clone runs the control plane on SQLite, enforces roles and returns `block` for a matching tool call | Python 3.11, `uv`, `sqlite3`; no account or Docker | `/health` JSON, CLI output and two policy decisions |
+| [Replay a seeded starfield](/recipes/starfield-seeded-run) | One seed produces a repeatable fixed frame | Python 3.9 or newer | Byte-identical snapshots and a JSON state dump |
+| [Prove a kitty repeats](/recipes/ckitty-deterministic-frame) | The C renderer repeats a specified frame | C11 compiler and ncurses | Byte-identical dumps, `make check` and `make sanitize` |
 
 <Tip>
   Run showcase recipes in a disposable checkout. Never substitute production credentials or customer data for a bundled fixture.

@@ -1,0 +1,118 @@
+---
+title: "Recipe: rerun the Tablebeam evaluation"
+sidebarTitle: "Tablebeam evaluation"
+description: "Regenerate Tablebeam's published comparison with pandas, SQLite and DuckDB from pinned inputs, offline, and check how many wrong answers sit on tables with their own total row."
+icon: "calculator"
+---
+
+**Claim:** On 554 WikiTableQuestions specs, Tablebeam returns a silently wrong number 0.4% of the time against 13.7% for pandas, 17.2% for SQLite and 11.7% for DuckDB, and it gets there partly by refusing 20.6% of the specs. The committed results at `f141ee7` follow from the pinned inputs.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Input</span>
+    <span className="fm-proof-value">Pinned CSVs and questions in `eval/inputs/`, checked by SHA-256</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Needs</span>
+    <span className="fm-proof-value">Git, Python 3.12 with SQLite 3.54.1 · no model, no API key</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Evidence</span>
+    <span className="fm-proof-value">Rates printed by `run_eval.py`, an unchanged `git status`, total-row counts</span>
+  </div>
+</div>
+
+## Prerequisites
+
+- Git;
+- Python 3.12, ideally with SQLite 3.54.1 (check with step 2);
+- network access for `git clone` and `pip install`. The evaluation itself reads only local files.
+
+Nothing in this recipe loads or calls a model.
+
+## 1. Clone the repository at the evaluated commit
+
+```bash
+git clone https://github.com/fortunexbt/tablebeam.git
+cd tablebeam
+git checkout f141ee739f
+```
+
+## 2. Install the pinned versions
+
+```bash
+python3.12 -m venv .venv-eval
+. .venv-eval/bin/activate
+python -m pip install -r eval/requirements.txt
+python -c "import sqlite3; print(sqlite3.sqlite_version)"
+```
+
+`eval/requirements.txt` pins DuckDB 2.0.0, numpy 2.5.4 and pandas 3.1.0. The last line should print `3.54.1`. SQLite comes with your Python build, and another version can change the SQLite column and make the files in step 4 differ.
+
+## 3. Run the evaluation
+
+```bash
+python eval/run_eval.py
+```
+
+It checks every input against `eval/inputs/manifest.json`, asks Tablebeam's browser engine (`web/engine.py`) each documented question, runs the same calculation in pandas, SQLite and DuckDB, and rewrites `eval/results.md` and `eval/results.json`. It took 36 seconds on an Apple Silicon laptop.
+
+## 4. Check the output matches the committed files
+
+```bash
+git status --short eval
+```
+
+This prints nothing when both result files are byte-identical to the ones committed at `f141ee7`.
+
+## 5. Count the wrong answers on total-row tables
+
+```bash
+python - <<'EOF'
+import json
+specs = json.load(open("eval/results.json"))["specs"]["wtq"]
+for name in ("pandas", "sqlite", "duckdb"):
+    wrong = [s for s in specs if s["scores"][name]["status"] == "wrong"]
+    total = [s for s in wrong if "total row" in s["scores"]["tablebeam"].get("detail", "")]
+    print(f"{name}: {len(wrong)} silent wrong, {len(total)} on tables Tablebeam refuses for a total row")
+EOF
+grep -n "nt-61 " eval/results.md
+```
+
+The script reads each WikiTableQuestions spec's scores. The `grep` shows one such spec: the table ends in a `Total` row, the truth is 36, and pandas, SQLite and DuckDB each return 72.
+
+## Expected evidence
+
+- step 2 prints `3.54.1`;
+- step 3 ends with these lines (the `wtq` rows are the WikiTableQuestions specs, `numeric` the 162 hard-format CSV specs):
+
+```
+wtq tablebeam: exact 78.9% (75.3–82.1) correct 79.1% (75.5–82.2) silent wrong 0.4% (0.1–1.3) refused 20.6% (17.4–24.1)
+wtq pandas: exact 84.8% (81.6–87.6) correct 85.0% (81.8–87.8) silent wrong 13.7% (11.1–16.8) refused 1.3% (0.6–2.6)
+wtq sqlite: exact 80.0% (76.4–83.1) correct 80.5% (77.0–83.6) silent wrong 17.2% (14.2–20.5) refused 2.4% (1.4–4.0)
+wtq duckdb: exact 84.5% (81.2–87.2) correct 84.5% (81.2–87.2) silent wrong 11.7% (9.3–14.7) refused 3.8% (2.5–5.7)
+numeric tablebeam: exact 52.5% (44.8–60.0) correct 63.0% (55.3–70.0) silent wrong 0.0% (0.0–2.3) refused 37.0% (30.0–44.7)
+numeric pandas: exact 50.0% (42.4–57.6) correct 61.7% (54.0–68.9) silent wrong 19.8% (14.3–26.6) refused 18.5% (13.3–25.2)
+numeric sqlite: exact 33.3% (26.5–40.9) correct 38.9% (31.7–46.6) silent wrong 38.9% (31.7–46.6) refused 22.2% (16.5–29.2)
+numeric duckdb: exact 43.2% (35.8–50.9) correct 54.9% (47.2–62.4) silent wrong 33.3% (26.5–40.9) refused 11.7% (7.6–17.6)
+provenance failures 0 of 542 answers; display mismatches 0; excluded 16
+```
+
+- step 4 prints nothing;
+- step 5 prints `pandas: 76 silent wrong, 32 on tables Tablebeam refuses for a total row`, `sqlite: 95 ..., 32 ...` and `duckdb: 65 ..., 32 ...`, then the `nt-61` row with `wrong: 72` three times.
+
+These matched on 23 October 2026 in a fresh clone at `f141ee7`.
+
+## This recipe does not prove
+
+- that Tablebeam answers more questions correctly. It answers fewer: 79.1% correct against 85.0% for pandas on the same specs, and on the hard-format files it refuses 37.0%, including 60 of the 65 Montpellier specs;
+- anything about pandas, SQLite or DuckDB used with explicit column types or a decimal separator. Every executor runs with its defaults;
+- that people can type these questions. None of the 954 WikiTableQuestions questions parsed in their original wording, and the 554 specs are re-asked in Tablebeam's documented form;
+- that the live demo behaves this way. On 23 October 2026 it serves the engine from `0b97d13`, before the total-row refusal was added;
+- anything about the optional **Ask AI** path, which the evaluation never calls.
+
+Remove the clone when finished:
+
+```bash
+deactivate && cd .. && rm -rf tablebeam
+```

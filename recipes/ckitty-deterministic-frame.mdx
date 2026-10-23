@@ -1,41 +1,51 @@
 ---
 title: "Recipe: prove a kitty repeats"
-description: "Build ckitty, render one seeded frame twice, compare it byte for byte, and run native verification."
+sidebarTitle: "ckitty seeded frame"
+description: "Build ckitty, render one seeded frame twice, compare the bytes, and run the native checks."
 icon: "repeat-2"
 ---
 
-**Claim:** ckitty's core renderer reproduces a specified pose and seed without initializing ncurses.
+**Claim:** `./ckitty --dump --seed 123 sit` prints the same frame on every run, without starting ncurses.
 
 <div className="fm-evidence-strip">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Input</span>
-    <span className="fm-proof-value">Pose `sit` · seed 123</span>
+    <span className="fm-proof-value">Pose `sit` · seed 123 · frame 0 · 80×24 canvas</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Path</span>
-    <span className="fm-proof-value">Plain stdout through `--dump`</span>
+    <span className="fm-proof-label">Needs</span>
+    <span className="fm-proof-value">C11 compiler, ncurses headers, Python 3</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Evidence</span>
-    <span className="fm-proof-value">Byte comparison, core tests, CLI tests, resize test</span>
+    <span className="fm-proof-value">`cmp` exit 0, `OK`, `CLI OK`, `TERMINAL OK`</span>
   </div>
 </div>
 
 ## Prerequisites
 
-- Git;
-- a C11 compiler;
-- ncurses development headers and `libm`;
-- Python 3 for the resize test.
+- Git.
+- A C11 compiler (`cc`).
+- Wide-character ncurses headers and libm. On Debian or Ubuntu install `libncurses-dev`, on Fedora `ncurses-devel`, on macOS `brew install ncurses`. The Makefile finds Homebrew's ncurses through `brew --prefix ncurses`.
+- Python 3 for the pseudo-terminal test in `make check`.
 
-On Debian or Ubuntu, install `libncurses-dev`. Fedora packages it as `ncurses-devel`. On macOS, the Makefile can discover Homebrew's ncurses installation.
-
-## 1. Build one binary
+## 1. Build and check
 
 ```bash
 git clone https://github.com/fortunexbt/ckitty.git
 cd ckitty
-make
+make && make check
+```
+
+`make` builds one `ckitty` binary from `src/ckitty.c` and `src/ckitty_core.c`, linked against real ncurses. `make check` then runs three suites. On 23 October 2026 at commit [`cd7d1fb`](https://github.com/fortunexbt/ckitty/tree/cd7d1fb328a6901c13ab2ded7716800e7a712d15) on macOS they printed:
+
+```text
+./ckitty_test
+OK
+tests/test_cli.sh ./ckitty
+CLI OK
+python3 tests/test_resize.py ./ckitty
+TERMINAL OK (controls, palettes, Unicode messages, compact help, quiet, pause/help, slow timing, live progress, screensaver, resizes)
 ```
 
 ## 2. Render the same kitty twice
@@ -46,24 +56,32 @@ ckitty_capture_dir="$(mktemp -d)"
 ./ckitty --dump --seed 123 sit > "$ckitty_capture_dir/kitty-a.txt"
 ./ckitty --dump --seed 123 sit > "$ckitty_capture_dir/kitty-b.txt"
 
-cmp "$ckitty_capture_dir/kitty-a.txt" "$ckitty_capture_dir/kitty-b.txt"
+cmp "$ckitty_capture_dir/kitty-a.txt" "$ckitty_capture_dir/kitty-b.txt" && echo identical
+cat "$ckitty_capture_dir/kitty-a.txt"
 ```
 
-`--dump` writes a clean frame to standard output without starting ncurses. `cmp` exits successfully when the renderings match byte for byte.
+`--dump` seeds the core RNG, renders frame 0 onto an 80×24 canvas, prints the canvas trimmed to the cat, and exits before `initscr()`. The output has no ANSI escapes. In the run above both files were 120 bytes, `cmp` exited 0, and the frame was:
 
-## 3. Exercise the native checks
-
-```bash
-make check
+```text
+     /\___/\
+    ( o   o )
+   -\   ^   /-
+     )`---'(
+    /  | |  \
+ __( ` | | ` )
+(   \__|_|__/
+  `-(__)(__)
 ```
 
-This target covers the renderer core, CLI behavior, and terminal resize handling.
+Each line in the file also keeps trailing spaces up to the cat's widest row. To pick a different moment or canvas, add `--frame N`, `--width W` or `--height H`. Themes don't change dump output.
 
-If your compiler supports AddressSanitizer and UndefinedBehaviorSanitizer:
+## 3. Run the sanitizers
 
 ```bash
 make sanitize
 ```
+
+This cleans, rebuilds with `-fsanitize=address,undefined`, and runs `make check` again. It printed the same `OK`, `CLI OK` and `TERMINAL OK` lines. Run `make clean && make` afterwards if you want an uninstrumented binary back.
 
 ## 4. Meet the interactive kitty
 
@@ -71,22 +89,22 @@ make sanitize
 ./ckitty
 ```
 
-Press <kbd>Space</kbd> to change pose, <kbd>N</kbd> for a new kitty, and <kbd>Q</kbd> to exit.
+Press <kbd>Space</kbd> to cycle poses, <kbd>1</kbd> to <kbd>4</kbd> for sit, sleep, play and walk, <kbd>N</kbd> for a new kitty, <kbd>T</kbd> for the next palette, <kbd>?</kbd> for help, and <kbd>Q</kbd> to quit. The same program, compiled to WebAssembly, runs at [ckitty.vercel.app](https://ckitty.vercel.app).
 
 ## Expected evidence
 
-- the two dump files match exactly;
-- `make check` exercises core, CLI, and resize paths;
-- the interactive application restores the terminal on normal exit;
-- a small terminal receives a resize message rather than corrupted art.
+- `cmp` exits 0 and the script prints `identical`.
+- The dump contains plain characters with no escape sequences.
+- `make check` prints `OK`, `CLI OK` and a `TERMINAL OK` line.
+- `make sanitize` prints the same lines with no sanitizer report.
 
 ## This recipe does not prove
 
-- identical interactive timing;
-- sanitizer availability on every toolchain;
-- packaging compatibility beyond the documented macOS and Linux boundary.
+- That interactive animation repeats. It depends on keypresses and the clock.
+- That the browser build behaves the same. It shares the core but swaps ncurses for `src/web_curses.c`. The Playwright key test (`make test-web`) is outside `make check`.
+- That every compiler and platform supports the sanitizers, or that the build works beyond macOS and Linux.
 
-Remove the temporary captures when finished:
+Remove the captures when you're done:
 
 ```bash
 rm -r "$ckitty_capture_dir"

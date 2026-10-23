@@ -1,87 +1,66 @@
 ---
-title: "Fortune Field Manual"
-description: "Architecture tours, reproducible demos, and release evidence for systems that show their work."
+title: "Field Manual"
+description: "Architecture notes, measured results and reproduction steps for fortunexbt's projects."
 icon: "radar"
 ---
 
-<div className="fm-hero">
-  <div className="fm-kicker">FORTUNE // OPERATING NOTES 01</div>
-  <p className="fm-hero-copy">
-    Control planes for machines. Local tools for people. Tiny terminal worlds with
-    reproducible state. This manual records what the systems do, where their
-    boundaries sit, and how you can check the claim yourself.
-  </p>
-  <div className="fm-signal-row">
-    <span className="fm-status">bounded</span>
-    <span className="fm-status">local</span>
-    <span className="fm-status">deterministic</span>
-    <span className="fm-status">verifiable</span>
-  </div>
-</div>
+There is one page per project on [fortunexbt.com](https://fortunexbt.com). Each covers how the code works, which files do the work, what has been measured, the commands that reproduce it, and what the project does not do. Every page was checked against its repository's default branch on **23 October 2026**. The [status ledger](/status) has one row per project.
 
-## Four systems, one discipline
-
-The projects differ in scale and temperament. Their useful common ground is an insistence on visible state, explicit boundaries, and evidence that survives the demo.
+## Tools
 
 <Columns cols={2}>
   <Card title="MUTX" icon="orbit" href="/architecture/mutx">
-    A control plane around AI agents: identity, runs, permissions, budgets,
-    approvals, observability, and audit history.
+    A FastAPI control plane with a Next.js dashboard, macOS app, CLI and Python SDK that registers agents, records their runs and checks tool calls against policy.
+  </Card>
+  <Card title="Bollard" icon="server" href="/architecture/bollard">
+    A macOS menu bar app and CLI that lists every TCP listener on the Mac by project and git branch, and stops the one you pick.
   </Card>
   <Card title="Tablebeam" icon="table-2" href="/architecture/tablebeam">
-    Private-by-default table Q&A that keeps deterministic retrieval separate from
-    generated answers and exposes the source rows.
+    Answers count, sum, average, median, min and max questions about a CSV without a model, and shows the rows and arithmetic behind each number.
   </Card>
-  <Card title="Terminal Starfield" icon="gamepad-2" href="/architecture/terminal-starfield">
-    A zero-dependency combat roguelite whose seeded simulation can emit both
-    terminal frames and machine-readable state.
+  <Card title="BoundaryBench" icon="shield-check" href="/architecture/boundary-bench">
+    A local stdio MCP server that serves AgentDojo's banking tools, records the session itself, and scores security and utility from the trace.
   </Card>
-  <Card title="ckitty" icon="cat" href="/architecture/ckitty">
-    A native C11 terminal companion with a deterministic renderer, resize-safe UI,
-    tests, and sanitizer checks.
+  <Card title="Queueglass" icon="boxes" href="/architecture/queueglass">
+    Paste real arrivals and per-step throughput, and it names the step that limits flow, when the backlog peaks and clears, and what one more unit of capacity changes.
+  </Card>
+  <Card title="World Watch" icon="globe" href="/architecture/world-watch">
+    USGS earthquakes, GDACS alerts, NWS and ECCC warnings and NASA FIRMS fire detections on one local map, each incident linked to the issuer's record.
+  </Card>
+  <Card title="Silicon Shader" icon="box" href="/architecture/minecraft-apple-silicon">
+    Minecraft Java shader setups for Apple Silicon, each timed on the same scripted flight, with a CLI that tries one in a copy and rolls it back.
   </Card>
 </Columns>
-## Read the manual in layers
 
-<Steps>
-  <Step title="Inspect the architecture">
-    See the operating surface, the trust boundary, and the exact verification hooks for each system.
-  </Step>
-  <Step title="Run the smallest honest demo">
-    Follow recipes designed to work with seeded data, local providers, or a documented install path.
-  </Step>
-  <Step title="Read the proof ledger">
-    Learn which evidence belongs in a build, release, or public capability claim.
-  </Step>
-  <Step title="Enter the labs carefully">
-    Released labs and bounded experiments keep implemented, simulated, and planned behavior separate.
-  </Step>
-</Steps>
+## Games
 
-## Evidence ledger
+<Columns cols={2}>
+  <Card title="Solar Drift" icon="sun" href="/architecture/solar-drift">
+    Loop around a sun and cross your own wake to capture it. Canvas and procedural audio in the browser.
+  </Card>
+  <Card title="Loop Courier" icon="route" href="/architecture/loop-courier">
+    Draw one route through a seeded city and make every deadline. A new city every midnight.
+  </Card>
+  <Card title="Terminal Starfield" icon="gamepad-2" href="/architecture/terminal-starfield">
+    A seeded space-combat roguelite in pure Python that runs in a terminal or in the browser on Pyodide.
+  </Card>
+  <Card title="ckitty" icon="cat" href="/architecture/ckitty">
+    An animated ASCII cat in C11, drawn through ncurses in a terminal and through a 65 KB WebAssembly build in the browser.
+  </Card>
+</Columns>
+
+## Reproduce a result
+
+The [recipes](/recipes/index) rerun one claim each from a fresh clone: Tablebeam's comparison with pandas, SQLite and DuckDB, the BoundaryBench report from committed Claude Code traces, a local MUTX policy check, and seeded frames from Terminal Starfield and ckitty.
+
+## Status labels
 
 | Label | It means | It does not mean |
 |---|---|---|
 | **Shipped** | A release or public use path exists | Every possible deployment is supported |
 | **Verified** | A reproducible check or inspectable artifact backs the claim | A badge passed once |
-| **Experiment** | Real code operates inside a deliberately limited envelope | Production-ready |
-| **Simulated** | The behavior is mocked or emulated on purpose | Connected to the named external system |
-| **Planned** | The direction is explicit and not implemented | “Almost done” |
+| **Experiment** | Real code runs inside a deliberately limited envelope | Production-ready |
+| **Simulated** | The behaviour is mocked or emulated on purpose | Connected to the named external system |
+| **Planned** | The direction is written down and not implemented | Almost done |
 
-<Note>
-  Architecture and lab claims were reviewed against the public repositories on **22 July 2026**. Product-specific documentation remains the authority for current installation and API details.
-</Note>
-
-## Choose a route
-
-<Columns cols={3}>
-  <Card title="Architecture" icon="network" href="/architecture/mutx">
-    Follow data, control, and evidence through each system.
-  </Card>
-  <Card title="Demo recipes" icon="terminal" href="/recipes/index">
-    Reproduce one meaningful claim at a time.
-  </Card>
-  <Card title="Proof & labs" icon="shield-check" href="/proof/build-and-release">
-    Separate release evidence from roadmap language.
-  </Card>
-</Columns>
+A label attaches to a specific surface, such as a release, a hosted demo or a command, not to a whole project.

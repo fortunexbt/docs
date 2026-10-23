@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "linden",
   "name": "Fortune Field Manual",
-  "description": "Architecture tours, reproducible demos, and release evidence for systems that show their work.",
+  "description": "Architecture notes, measured results and reproduction steps for fortunexbt's projects.",
   "colors": {
     "primary": "#075985",
     "light": "#48EEFF",
@@ -52,43 +52,50 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Field manual",
+        "tab": "Projects",
         "icon": "radar",
         "groups": [
           {
             "group": "Start",
             "pages": [
               "index",
-              "start-here"
+              "status"
             ]
           },
           {
-            "group": "Architecture tours",
+            "group": "Tools",
             "pages": [
               "architecture/mutx",
+              "architecture/bollard",
               "architecture/tablebeam",
-              "architecture/terminal-starfield",
-              "architecture/ckitty"
+              "architecture/boundary-bench",
+              "architecture/queueglass",
+              "architecture/world-watch",
+              "architecture/minecraft-apple-silicon"
             ]
           },
           {
-            "group": "Design principles",
+            "group": "Games",
             "pages": [
-              "principles/index"
+              "architecture/solar-drift",
+              "architecture/loop-courier",
+              "architecture/terminal-starfield",
+              "architecture/ckitty"
             ]
           }
         ]
       },
       {
-        "tab": "Demo recipes",
+        "tab": "Recipes",
         "icon": "play",
         "groups": [
           {
-            "group": "Reproduce the claim",
+            "group": "Reproduce one claim",
             "pages": [
               "recipes/index",
+              "recipes/tablebeam-exact-answers",
+              "recipes/boundary-bench-report",
               "recipes/mutx-operator-loop",
-              "recipes/tablebeam-source-trail",
               "recipes/starfield-seeded-run",
               "recipes/ckitty-deterministic-frame"
             ]
@@ -96,31 +103,13 @@
         ]
       },
       {
-        "tab": "Proof & labs",
+        "tab": "Proof",
         "icon": "shield-check",
         "groups": [
           {
-            "group": "Proof discipline",
+            "group": "Proof",
             "pages": [
               "proof/build-and-release"
-            ]
-          },
-          {
-            "group": "Labs",
-            "pages": [
-              "labs/status",
-              "labs/barter",
-              "labs/securepath"
-            ]
-          },
-          {
-            "group": "Night-shift launches",
-            "pages": [
-              "labs/solar-drift",
-              "labs/loop-courier",
-              "labs/switchyard",
-              "labs/ambient-relay",
-              "labs/queueglass"
             ]
           }
         ]
@@ -134,8 +123,8 @@
           "icon": "github"
         },
         {
-          "anchor": "MUTX",
-          "href": "https://mutx.dev",
+          "anchor": "MUTX docs",
+          "href": "https://docs.mutx.dev",
           "icon": "activity"
         }
       ]
@@ -144,23 +133,59 @@
   "redirects": [
     {
       "source": "/quickstart",
-      "destination": "/start-here"
+      "destination": "/"
     },
     {
       "source": "/development",
-      "destination": "/start-here"
+      "destination": "/"
+    },
+    {
+      "source": "/start-here",
+      "destination": "/"
+    },
+    {
+      "source": "/principles",
+      "destination": "/"
+    },
+    {
+      "source": "/principles/:slug*",
+      "destination": "/"
     },
     {
       "source": "/essentials/:slug*",
-      "destination": "/principles"
+      "destination": "/"
     },
     {
       "source": "/ai-tools/:slug*",
-      "destination": "/start-here"
+      "destination": "/"
     },
     {
       "source": "/api-reference/:slug*",
       "destination": "/architecture/mutx"
+    },
+    {
+      "source": "/labs/status",
+      "destination": "/status"
+    },
+    {
+      "source": "/labs/solar-drift",
+      "destination": "/architecture/solar-drift"
+    },
+    {
+      "source": "/labs/loop-courier",
+      "destination": "/architecture/loop-courier"
+    },
+    {
+      "source": "/labs/queueglass",
+      "destination": "/architecture/queueglass"
+    },
+    {
+      "source": "/labs/:slug*",
+      "destination": "/status"
+    },
+    {
+      "source": "/recipes/tablebeam-source-trail",
+      "destination": "/recipes/tablebeam-exact-answers"
     }
   ],
   "navbar": {
@@ -168,16 +193,12 @@
       {
         "type": "github",
         "href": "https://github.com/fortunexbt"
-      },
-      {
-        "label": "Portfolio",
-        "href": "https://fortunexbt.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Run MUTX",
-      "href": "https://mutx.dev"
+      "label": "Portfolio",
+      "href": "https://fortunexbt.com"
     }
   },
   "contextual": {

@@ -1,0 +1,43 @@
+---
+title: "Status ledger"
+description: "One dated row per project: its status label, the strongest current proof, and the main open gap."
+icon: "flask-conical"
+---
+
+Each row was checked against the project's default branch on **23 October 2026**. A row changes in the same pull request as the page it summarises.
+
+<div className="fm-evidence-strip">
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Reviewed</span>
+    <span className="fm-proof-value">23 October 2026 · public default branches</span>
+  </div>
+  <div className="fm-evidence-cell">
+    <span className="fm-proof-label">Method</span>
+    <span className="fm-proof-value">Fresh clone, repo tests run, published numbers recomputed where cheap</span>
+  </div>
+</div>
+
+## Tools
+
+| Project | Status | Strongest current proof | Main open gap |
+|---|---|---|---|
+| [MUTX](/architecture/mutx) | Shipped · v1.4.0 source, hosted service offline | Local API on SQLite with role checks and a working policy block; 58 policy, approval, RBAC and run tests pass | Hosted service down, published install paths stale, CI workflows disabled |
+| [Bollard](/architecture/bollard) | Shipped · Homebrew cask, ad-hoc signed, not notarised | 19 policy checks in CI and a published scan benchmark | No Developer ID or notarisation; restart, `brew services stop` and Intel paths untested |
+| [Tablebeam](/architecture/tablebeam) | Shipped · browser demo and Streamlit app | Pinned evaluation at `f141ee7` reproduces byte for byte: 0.4% silent wrong against pandas 13.7%, SQLite 17.2%, DuckDB 11.7% | Live demo still runs the pre-evaluation engine; the low wrong rate comes mostly from refusing |
+| [BoundaryBench](/architecture/boundary-bench) | Verified · run from a clone, not on npm | 38 committed Claude Code traces re-score to the published table, including 5 of 5 budget-cap breaches | 3 to 6 runs per scenario, one model and one client; the trace is an unsigned file |
+| [Queueglass](/architecture/queueglass) | Shipped · live on Vercel | BPI Challenge 2019 headline reproduces from the committed CSV; 19 tests and the browser smoke pass | Fixed capacity and every item through every step; no release tagged since v1.0.0 |
+| [World Watch](/architecture/world-watch) | Experiment · local demo, hosted deployment paused | 314 of 315 offline tests pass (1 skipped) and the severity-gate evaluation reruns byte for byte | Gate measured on earthquakes only, with stand-in proposers; it does not check that a quote is about the same event |
+| [Silicon Shader](/architecture/minecraft-apple-silicon) | Shipped · GitHub Pages library and Python CLI | Per-frame intervals are published in every bundle, and recomputing them reproduces the README figures | One base M4, one flight per side, all bundles from one author |
+
+## Games
+
+| Project | Status | Strongest current proof | Main open gap |
+|---|---|---|---|
+| [Solar Drift](/architecture/solar-drift) | Shipped · GitHub Pages | 15 rule tests, including seed determinism; Pages serves the `main` bundle | The Vercel demo the README links is stale; no browser tests |
+| [Loop Courier](/architecture/loop-courier) | Shipped · GitHub Pages and Vercel | 25 Node tests and 4 Playwright suites pass in Chromium and WebKit, with replay parity across frame rates | The economy test checks a simplified model, not the game's own simulation |
+| [Terminal Starfield](/architecture/terminal-starfield) | Shipped · v4.0.0 release and web build | 128 unittest cases pass; a seeded `--snapshot` is byte-identical across runs | Not on PyPI, so the README's `pipx install terminal-starfield` fails |
+| [ckitty](/architecture/ckitty) | Shipped · v1.1.0 binaries and web build | `make check` and `make sanitize` pass; the rebuilt wasm is byte-identical to the committed file | No release or Homebrew formula includes the web build |
+
+## Removed pages
+
+The July 2026 pages for Barter, SecurePath, Switchyard and Ambient Relay were removed on 23 October 2026. Those projects are not on the portfolio, and their old URLs redirect here.
