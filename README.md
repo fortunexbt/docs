@@ -3,7 +3,7 @@
 [![Docs proof](https://github.com/fortunexbt/docs/actions/workflows/docs.yml/badge.svg)](https://github.com/fortunexbt/docs/actions/workflows/docs.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-48EEFF.svg)](LICENSE)
 
-Architecture notes, measured results and reproduction steps for the projects on [fortunexbt.com](https://fortunexbt.com). Each page says what the code does, links the files that do it, gives commands that reproduce the main claim, and lists what the project does not do.
+Architecture notes, measured results and reproduction steps for the projects on [fortunexbt.com](https://fortunexbt.com). Read it at [fortunexbt-docs.vercel.app](https://fortunexbt-docs.vercel.app). Each page says what the code does, links the files that do it, gives commands that reproduce the main claim, and lists what the project does not do.
 
 ## What is inside
 
@@ -47,6 +47,10 @@ npx --yes mint@4.2.723 a11y
 The same checks run in GitHub Actions on every pull request and push to `main`. Editorial rules live in [`AGENTS.md`](AGENTS.md) and contribution requirements in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 Project pages were last reviewed against each repository's default branch on 23 October 2026. Update the date on a page whenever its facts change.
+
+## Hosting
+
+Vercel builds the site on every push to `main` with `node scripts/build-site.mjs`. The script runs `mint export`, unpacks the static site into Vercel's Build Output API layout, and turns the `redirects` in `docs.json` into routes. It also disables the export's live-reload client, which only works against `mint dev`.
 
 ## License
 
