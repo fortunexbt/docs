@@ -1,37 +1,33 @@
-# Fortune Field Manual
+# Field Manual
 
 [![Docs proof](https://github.com/fortunexbt/docs/actions/workflows/docs.yml/badge.svg)](https://github.com/fortunexbt/docs/actions/workflows/docs.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-48EEFF.svg)](LICENSE)
 
-Architecture tours, reproducible demos, and release evidence for **systems that show their work**.
-
-The Field Manual is the technical depth layer behind Fortune's public projects. It documents what the code does, where the trust boundary sits, how to reproduce the flagship claim, and what remains experimental.
+Architecture notes, measured results and reproduction steps for the projects on [fortunexbt.com](https://fortunexbt.com). Each page says what the code does, links the files that do it, gives commands that reproduce the main claim, and lists what the project does not do.
 
 ## What is inside
 
-| Section | Purpose |
+| Path | Contents |
 |---|---|
-| `architecture/` | Tours of MUTX, Tablebeam, Terminal Starfield, and ckitty |
-| `principles/` | Bounded, local, deterministic, and verifiable design |
-| `recipes/` | Secret-minimal demos with stable inputs and inspectable evidence |
-| `proof/` | Build and release proof philosophy |
-| `labs/` | Dated implementation, simulation, and promotion-status ledgers |
+| `index.mdx` | Project list and status vocabulary |
+| `status.mdx` | Dated status ledger for every project |
+| `architecture/` | One page per project: MUTX, Bollard, Tablebeam, BoundaryBench, Queueglass, World Watch, Minecraft on Apple silicon, Solar Drift, Loop Courier, Terminal Starfield, ckitty |
+| `recipes/` | Step-by-step reproductions of one claim each |
+| `proof/` | What a build or release claim needs behind it |
 
-The site uses the Mintlify `linden` theme with a project-specific “control room after midnight” visual system in `docs.json`, `style.css`, and the custom SVG assets.
+The site uses the Mintlify `linden` theme, with colours and type set in `docs.json`, `style.css` and the SVG assets.
 
 ## Status vocabulary
 
-- **Shipped** — a release or public use path exists.
-- **Verified** — a reproducible check or inspectable artifact backs the claim.
-- **Experiment** — real code operates inside a deliberately limited envelope.
-- **Simulated** — behavior is mocked or emulated rather than connected to the named external system.
-- **Planned** — the direction is explicit and not implemented.
-
-These terms are editorial constraints. Do not replace them with broader marketing language.
+- **Shipped**: a release or public use path exists.
+- **Verified**: a reproducible check or inspectable artifact backs the claim.
+- **Experiment**: real code that runs inside a deliberately limited envelope.
+- **Simulated**: behaviour is mocked or emulated rather than connected to the named external system.
+- **Planned**: the direction is written down and not implemented.
 
 ## Preview locally
 
-Mintlify requires Node.js 20.17.0 or newer. The commands pin the CLI version used by CI.
+Mintlify needs Node.js 20.17.0 or newer. The commands pin the CLI version CI uses.
 
 ```bash
 npx --yes mint@4.2.723 dev
@@ -48,20 +44,10 @@ npx --yes mint@4.2.723 broken-links --check-anchors
 npx --yes mint@4.2.723 a11y
 ```
 
-The same proof gate runs in GitHub Actions on every pull request and push to `main`.
+The same checks run in GitHub Actions on every pull request and push to `main`. Editorial rules live in [`AGENTS.md`](AGENTS.md) and contribution requirements in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-The repository-specific editorial and design rules live in [`AGENTS.md`](AGENTS.md). Contribution requirements live in [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
-## Primary evidence
-
-- [MUTX](https://github.com/mutx-dev/mutx-dev)
-- [Tablebeam](https://github.com/fortunexbt/tablebeam)
-- [Terminal Starfield](https://github.com/fortunexbt/terminal-starfield)
-- [ckitty](https://github.com/fortunexbt/ckitty)
-- [Barter](https://github.com/fortunexbt/barter)
-
-Lab status was reviewed against public default branches on 22 July 2026. Update the date whenever the implementation boundary changes.
+Project pages were last reviewed against each repository's default branch on 23 October 2026. Update the date on a page whenever its facts change.
 
 ## License
 
-The documentation repository is licensed under the terms in [`LICENSE`](LICENSE). Linked projects retain their own licenses.
+The documentation is licensed under the terms in [`LICENSE`](LICENSE). Linked projects keep their own licences.

@@ -1,31 +1,34 @@
 ---
 title: "Recipe: replay a seeded starfield"
-description: "Generate byte-identical terminal frames from one Starfield seed and inspect machine-readable game state."
+sidebarTitle: "Starfield seeded frame"
+description: "Render the same Terminal Starfield frame twice from one seed, compare the bytes, and read the game state as JSON."
 icon: "binary"
 ---
 
-**Claim:** a fixed Starfield seed and viewport produce a repeatable rendered frame and inspectable state.
+**Claim:** with the same seed, viewport and flags, `--snapshot` prints a byte-identical frame, and `--state-snapshot` prints the matching game state as JSON.
 
 <div className="fm-evidence-strip">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Input</span>
-    <span className="fm-proof-value">Seed 42 · viewport 80×24 · ASCII · no color</span>
+    <span className="fm-proof-value">Seed 42 · 80×24 · `--ascii --no-color`</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Comparison</span>
-    <span className="fm-proof-value">Two independent snapshot commands</span>
+    <span className="fm-proof-label">Needs</span>
+    <span className="fm-proof-value">Python 3.9+ and Git, no packages</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Evidence</span>
-    <span className="fm-proof-value">`cmp` success plus state-snapshot output</span>
+    <span className="fm-proof-value">`cmp` exit 0, state JSON, `Ran 128 tests ... OK`</span>
   </div>
 </div>
 
 ## Prerequisites
 
-- Python 3.9 or newer;
-- Git;
-- a macOS or Linux shell, or Windows through WSL.
+- Python 3.9 or newer.
+- Git.
+- A macOS or Linux shell, or Windows through WSL.
+
+The snapshot commands don't need a TTY, so they also work in CI or over a pipe.
 
 ## 1. Clone the game
 
@@ -34,9 +37,9 @@ git clone https://github.com/fortunexbt/terminal-starfield.git
 cd terminal-starfield
 ```
 
-No package installation is required for the checkout entry point.
+You run everything from the checkout through `starfield.py`. Nothing gets installed.
 
-## 2. Capture the same universe twice
+## 2. Render the same frame twice
 
 ```bash
 starfield_capture_dir="$(mktemp -d)"
@@ -46,51 +49,60 @@ python3 starfield.py --snapshot 80x24 --seed 42 --no-color --ascii \
 python3 starfield.py --snapshot 80x24 --seed 42 --no-color --ascii \
   > "$starfield_capture_dir/frame-b.txt"
 
-cmp "$starfield_capture_dir/frame-a.txt" "$starfield_capture_dir/frame-b.txt"
+cmp "$starfield_capture_dir/frame-a.txt" "$starfield_capture_dir/frame-b.txt" && echo identical
 ```
 
-`cmp` prints nothing and exits successfully when the files are identical.
+Each command starts a fresh process, builds a campaign `Simulation` with seed 42, advances it 2.2 s of game time in fixed 120 Hz steps, and prints one frame. `cmp` prints nothing and exits 0 when the files match. On 23 October 2026 at commit [`3765e27`](https://github.com/fortunexbt/terminal-starfield/tree/3765e2747d006b8c2fde4e0c8590f7c885b49395) both files were 1,944 bytes and identical. The frame opens with the HUD line `VANGUARD // ODYSSEY` and shows `WAVE 01 // HOSTILES INBOUND`.
 
-## 3. Inspect the state surface
+To render other staged screens, add `--snapshot-screen boss`, `route`, `upgrade` or `systems`, among others.
+
+## 3. Read the state as JSON
 
 ```bash
 python3 starfield.py --state-snapshot --seed 42
 ```
 
-This command is intended for automation. It exposes live game state without requiring a human to infer state from ANSI pixels.
+This prints the same simulated moment as one JSON object, built by `Simulation.render_game_to_text` in [`model.py`](https://github.com/fortunexbt/terminal-starfield/blob/main/terminal_starfield/model.py). For seed 42 it reports `"seed":42`, `"wave":1`, `"ship":"vanguard"`, two `scout` enemies with positions and hit points, and a `target` that is aligned and locked. To list the top-level keys:
 
-## 4. Run the campaign checks
+```bash
+python3 starfield.py --state-snapshot --seed 42 \
+  | python3 -c 'import json, sys; print(sorted(json.load(sys.stdin)))'
+```
+
+That printed `coordinates`, `credits`, `enemies`, `jump_time`, `kills`, `mode`, `pickups`, `player`, `projectiles`, `remaining`, `route`, `route_choices`, `route_history`, `run_stats`, `score`, `screen`, `seed`, `services`, `ship`, `target`, `upgrade_choices`, `upgrades`, `wave`, `wave_total` and `weapons`.
+
+## 4. Run the test suite
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-The suite exercises campaign progression, bosses, weapons, upgrades, viewport sizing, and output handling.
+Use `unittest`. A bare `pytest` fails at collection with `ModuleNotFoundError: No module named 'terminal_starfield'` because nothing puts the repo root on `sys.path`. On 23 October 2026 the run printed `Ran 128 tests` and `OK` in about 24 s. The tests cover the fixed-step clock, swept collisions, boss volleys, routes, refit services, ship loadouts, compact and ASCII layouts, input decoding, flight records and pseudo-terminal restoration.
 
-## 5. Enter the interactive path
+## 5. Play it
 
 ```bash
 python3 starfield.py
 ```
 
-The interactive run adds timing and human input. It is more expressive and less constrained than the fixed snapshot proof.
+This needs a real TTY. Press <kbd>Enter</kbd> on the flight deck to launch, steer with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>, fire with <kbd>Space</kbd>, and quit with <kbd>Q</kbd>. You can also play the same code in a browser at [terminal-starfield.vercel.app](https://terminal-starfield.vercel.app).
 
 ## Expected evidence
 
-- both 80×24 captures are byte-identical;
-- output contains no color escape dependency in the selected compatibility mode;
-- state snapshot output is readable by automation;
-- the unit suite covers a complete campaign path.
+- `cmp` exits 0 and the script prints `identical`.
+- The frame contains only ASCII characters and no ANSI color codes.
+- `--state-snapshot` prints valid JSON with `"seed":42`.
+- The unittest run ends with `OK`.
 
 ## This recipe does not prove
 
-- identical timing under live keyboard input;
-- performance across every terminal emulator;
-- that seed 42 covers the entire game state space.
+- That a live run repeats. Keyboard input arrives at different simulation times, which changes later random draws.
+- Frame rate or smoothness in any terminal emulator or browser.
+- Anything about the browser build beyond what the shared Python code covers.
+- That seed 42 reaches most of the game. It shows the first 2.2 s of wave 1.
 
-Remove the temporary capture directory when you no longer need the evidence:
+Remove the captures when you're done:
 
 ```bash
 rm -r "$starfield_capture_dir"
 ```
-

@@ -1,94 +1,164 @@
 ---
-title: "Recipe: inspect a MUTX topology"
-description: "Install the documented MUTX CLI, select hosted or local setup, and capture a health report."
+title: "Recipe: run the MUTX API locally and check a policy"
+sidebarTitle: "MUTX local policy check"
+description: "Start the MUTX control plane on SQLite, sign in with the CLI, register and stop an agent, and watch a block rule decide two tool calls, with no hosted account or Docker."
 icon: "activity"
 ---
 
-**Claim:** the public CLI can configure one of the documented operating topologies and expose a health check to the operator.
+**Claim:** a fresh clone of `mutx-dev/mutx-dev` runs its control plane on SQLite with no account, enforces roles from the database, and returns `block` for a tool call that matches a tenant rule and `allow` for one that doesn't.
 
 <div className="fm-evidence-strip">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Input</span>
-    <span className="fm-proof-value">Hosted account or local Docker runtime</span>
+    <span className="fm-proof-value">`main` at `5ad48f0`, a local SQLite file</span>
   </div>
   <div className="fm-evidence-cell">
-    <span className="fm-proof-label">Action</span>
-    <span className="fm-proof-value">Install, configure, run doctor</span>
+    <span className="fm-proof-label">Needs</span>
+    <span className="fm-proof-value">Git, Python 3.11, `uv`, `curl`, `sqlite3` · no Docker, no API key, no account</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Evidence</span>
-    <span className="fm-proof-value">CLI health report plus reachable operator surface</span>
+    <span className="fm-proof-value">`/health` JSON, CLI output, two policy decisions, 58 tests</span>
   </div>
 </div>
 
 ## Prerequisites
 
-- macOS with Homebrew for the documented CLI install path;
-- a MUTX account for hosted setup, or Docker for local setup;
-- permission to create local configuration on the machine.
+- macOS or Linux with Git, `curl` and `sqlite3`;
+- Python 3.11 and [`uv`](https://docs.astral.sh/uv/) (plain `python3.11 -m venv` and `pip` also work);
+- port 8000 free, and about 500 MB of disk for the Python packages.
 
-## 1. Install the CLI
+The hosted service at `mutx.dev` and `api.mutx.dev` is down, so this recipe stays on localhost. Nothing in it calls a model.
 
-```bash
-brew tap mutx-dev/homebrew-tap
-brew install mutx
-mutx --help
-```
-
-The help output establishes that the installed command resolves. It does not establish service health.
-
-## 2. Choose one topology
-
-Hosted is the documented default:
+## 1. Clone and install
 
 ```bash
-mutx setup hosted
+git clone --depth 1 https://github.com/mutx-dev/mutx-dev.git
+cd mutx-dev
+uv venv .venv --python 3.11
+uv pip install --python .venv/bin/python -r test-requirements.txt -e '.[dev]'
 ```
 
-For a Docker-backed local stack, run this instead:
+This installs the API's runtime dependencies, pytest, and the `mutx` CLI from the checkout into `.venv`.
+
+## 2. Start the API on SQLite
 
 ```bash
-mutx setup local
+DATABASE_URL="sqlite+aiosqlite:///$PWD/.mutx-local.db" \
+REQUIRE_EMAIL_VERIFICATION=false WEB_CONCURRENCY=1 \
+  .venv/bin/uvicorn src.api.main:app --port 8000
 ```
 
-Do not run both paths simply to make the demo look larger. The point is to observe one explicit topology.
+Leave it running. SQLite needs `WEB_CONCURRENCY=1`. Turning off email verification lets a password account sign in without an email provider. The log ends with `Database tables verified/created` and `Starting background agent monitor...`.
 
-## 3. Inspect health
+Open a second terminal in the same `mutx-dev` directory and check the probe:
 
 ```bash
-mutx doctor
+curl -s localhost:8000/health
 ```
 
-Keep the report with secrets removed. A useful capture identifies the selected topology and which required services or credentials passed or failed.
+## 3. Give the CLI a throwaway config
 
-## 4. Inspect the human surface
+The CLI keeps its API URL and tokens in `~/.mutx/config.json`. Point `HOME` at a temporary directory in this terminal so your real config isn't touched:
 
-For hosted setup, open the authenticated dashboard linked by the product. For local setup, the public repository documents the following development surfaces:
+```bash
+export MUTX_DEMO_HOME="$(mktemp -d)"
+export HOME="$MUTX_DEMO_HOME"
+.venv/bin/mutx doctor
+```
 
-| URL | Surface |
-|---|---|
-| `http://localhost:3000` | Landing site |
-| `http://localhost:3000/dashboard` | Operator dashboard |
-| `http://localhost:8000` | Control-plane API |
-| `http://localhost:8000/docs` | Swagger UI |
+The CLI's default URL is `http://localhost:8000`, so no extra flag is needed here.
 
-Those local URLs describe the development stack. A CLI-managed local deployment may expose surfaces differently; follow the current [MUTX documentation](https://docs.mutx.dev) when they differ.
+## 4. Create and sign in an operator
+
+```bash
+.venv/bin/mutx auth register -n Operator -e operator@example.com -p 'Local!demo2026'
+.venv/bin/mutx auth login -e operator@example.com -p 'Local!demo2026' -u http://localhost:8000
+.venv/bin/mutx whoami
+```
+
+`register` prints "Verify your email" even with verification off. The password needs an uppercase letter and a special character. Keep `-u` on `login`, because the login command treats `localhost:8000` as "not set" and otherwise sends your password to `https://api.mutx.dev` ([`resolve_hosted_api_url`](https://github.com/mutx-dev/mutx-dev/blob/main/cli/config.py)).
+
+## 5. Hit the role check, then grant the role
+
+```bash
+.venv/bin/mutx agents create -n demo-agent -t openai -c '{"model":"gpt-4o-mini"}'
+```
+
+This fails, because every new account is a `VIEWER` and creating agents needs `DEVELOPER`. No API route grants roles, so write it into the database:
+
+```bash
+sqlite3 .mutx-local.db \
+  "UPDATE users SET roles='[\"VIEWER\",\"DEVELOPER\"]' WHERE email='operator@example.com';"
+```
+
+Roles are read from the database on each request, so you don't need to sign in again.
+
+## 6. Register and stop an agent
+
+```bash
+.venv/bin/mutx agents create -n demo-agent -t openai -c '{"model":"gpt-4o-mini"}'
+AGENT=$(.venv/bin/mutx agents list | awk '/demo-agent/ {print $1}')
+.venv/bin/mutx agents stop "$AGENT"
+.venv/bin/mutx agents status "$AGENT"
+```
+
+Creating the agent stores a record with status `creating` and doesn't contact OpenAI. Stopping it sets the status to `stopped` in the database.
+
+## 7. Add a block rule and evaluate two tool calls
+
+The CLI has no policy command, so use the API with the token the CLI saved:
+
+```bash
+TOKEN=$(python3 -c 'import json,os; print(json.load(open(os.path.expanduser("~/.mutx/config.json")))["access_token"])')
+
+curl -s -X POST localhost:8000/v1/policies \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"id":"no-shell","name":"no-shell","enabled":true,"version":1,
+       "rules":[{"type":"block","pattern":"shell.exec","action":"deny","scope":"tool"}]}'
+
+curl -s -X POST localhost:8000/v1/policies/evaluate \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"tool\":\"shell.exec\",\"agent_id\":\"$AGENT\"}"
+
+curl -s -X POST localhost:8000/v1/policies/evaluate \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d "{\"tool\":\"web.search\",\"agent_id\":\"$AGENT\"}"
+```
+
+[`policy_store.py`](https://github.com/mutx-dev/mutx-dev/blob/main/src/api/services/policy_store.py) matches each rule's pattern against the tool name as a glob or a substring, case-insensitively.
+
+## 8. Run the matching tests
+
+```bash
+.venv/bin/python -m pytest tests/api/test_policies.py tests/api/test_approval_enforcement.py \
+  tests/api/test_lane_a_rbac.py tests/api/test_runs.py -q
+```
+
+These cover policy CRUD and evaluation, approval enforcement before tool execution, role checks and run records.
 
 ## Expected evidence
 
-- `mutx --help` resolves from the installed package;
-- setup names the selected operating mode;
-- `mutx doctor` reports concrete checks rather than a generic success message;
-- the matching operator surface is reachable.
+- `/health` returns `"status":"healthy"` and `"database":"ready"`;
+- the first `mutx doctor` shows `Authenticated: no` and `API Health: healthy`, with OpenClaw missing and documents not ready;
+- `mutx whoami` prints `Email: operator@example.com` and `Plan: FREE`;
+- the first `agents create` prints `Error: Insufficient permissions. Required roles: ['DEVELOPER']`, and the second prints `Created agent: <uuid> - demo-agent`;
+- `agents status` ends with `Status: stopped`;
+- the `shell.exec` evaluation returns `"decision":"block"` with one match from `no-shell`, and the `web.search` evaluation returns `"decision":"allow"` with `"No enabled policy rules matched"`;
+- pytest prints `58 passed`.
+
+These matched on 23 October 2026 at `5ad48f0`.
 
 ## This recipe does not prove
 
-- that an agent has been deployed or governed;
-- that RBAC, OIDC, budgets, or approval gates were exercised;
-- that a hosted or local environment passed security review;
-- that every infrastructure target is healthy.
+- that an agent ran. The agent is a database record, and no process registered against it;
+- that stopping it would stop a live agent process. The API writes no command to the queue agents poll;
+- that the governed runtime in `src/security`, its signed receipts or the approval flow ran. `/v1/policies/evaluate` is the tenant rule check only, and the approval route needs a paid plan;
+- anything about PostgreSQL, Redis, Docker, the dashboard, the macOS app or the hosted service;
+- that this setup is safe to expose. Email verification is off, the JWT secret is generated per process, and the role was granted by editing the database.
 
-<Info>
-  Continue with the product's own run and policy guides for a full operator workflow. This manual does not invent commands that are absent from the public quickstart.
-</Info>
+Stop the API with Ctrl-C, then remove the clone and the temporary config from the second terminal:
 
+```bash
+cd .. && rm -rf mutx-dev "$MUTX_DEMO_HOME"
+```
