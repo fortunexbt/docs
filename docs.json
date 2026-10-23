@@ -92,7 +92,7 @@
           {
             "group": "Reproduce one claim",
             "pages": [
-              "recipes/index",
+              "recipes",
               "recipes/tablebeam-exact-answers",
               "recipes/boundary-bench-report",
               "recipes/mutx-operator-loop",
@@ -186,6 +186,10 @@
     {
       "source": "/recipes/tablebeam-source-trail",
       "destination": "/recipes/tablebeam-exact-answers"
+    },
+    {
+      "source": "/recipes/index",
+      "destination": "/recipes"
     }
   ],
   "navbar": {
