@@ -19,17 +19,18 @@ for (const file of ['serve.js', 'Start Docs.command', 'Start Docs.bat', 'LICENSE
 
 // The export is built for local preview and keeps the dev server's live-reload
 // client, which polls /socket.io every five seconds and 404s on a static host.
-// Short-circuit its start. The CLI version is pinned, so the needle must match once.
+// Short-circuit its start. The CLI fetches its client bundle at build time, so
+// minified names vary; match the shape and fail if it isn't found exactly once.
 const chunks = `${out}/static/_next/static/chunks`
-const needle = 'i||(console.warn("Connected to Socket.io"),'
-const patched = readdirSync(chunks).filter((file) => {
+const hook = /(\w+)\|\|\(console\.warn\("Connected to Socket\.io"\),/g
+const patched = readdirSync(chunks).flatMap((file) => {
   const path = `${chunks}/${file}`
   const code = readFileSync(path, 'utf8')
-  if (!code.includes(needle)) return false
-  writeFileSync(path, code.replace(needle, 'i||!1&&(console.warn("Connected to Socket.io"),'))
-  return true
+  const hits = code.match(hook) ?? []
+  if (hits.length) writeFileSync(path, code.replace(hook, '$1||!1&&(console.warn("Connected to Socket.io"),'))
+  return hits
 })
-if (patched.length !== 1) throw new Error(`live-reload hook found in ${patched.length} chunks, expected 1`)
+if (patched.length !== 1) throw new Error(`live-reload hook found ${patched.length} times, expected 1`)
 
 const toRegex = (source) =>
   '^' + source.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\/:\w+\*$/, '(?:/.*)?') + '/?$'
