@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Fortune Field Manual">
-  <rect width="64" height="64" rx="14" fill="#09080b"/>
-  <path d="M15 16h34M15 48h34M16 15v34M48 15v34" stroke="#48eeff" stroke-width="2" opacity=".45"/>
-  <path d="m22 23 8 9-8 9M34 41h9" fill="none" stroke="#f4f7f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="49" cy="15" r="5" fill="#9c6cff"/>
-  <circle cx="15" cy="49" r="3" fill="#ffc44a"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Field Manual"><rect width="64" height="64" fill="#000"/><defs><linearGradient id="lens" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE14D"/><stop offset=".55" stop-color="#FF7A1A"/><stop offset="1" stop-color="#E8202A"/></linearGradient></defs><g transform="translate(9 10)"><path d="M0 13h46l-.9 9.6C44.5 30 40.4 34.5 34.4 34.5c-4.9 0-7.9-2.8-9.6-7.2-.6-1.6-3-1.6-3.6 0-1.7 4.4-4.7 7.2-9.6 7.2C5.6 34.5 1.5 30 .9 22.6z" fill="url(#lens)"/><rect x="-1" y="9.5" width="48" height="3.5" fill="#3DD6C0"/></g></svg>

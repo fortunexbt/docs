@@ -1,45 +1,38 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "linden",
-  "name": "Fortune Field Manual",
+  "name": "Field Manual",
   "description": "Architecture notes, measured results and reproduction steps for fortunexbt's projects.",
   "colors": {
-    "primary": "#075985",
-    "light": "#48EEFF",
-    "dark": "#9C6CFF"
+    "primary": "#0A6B5F",
+    "light": "#3DD6C0",
+    "dark": "#0A6B5F"
   },
   "appearance": {
     "default": "dark",
     "strict": false
   },
   "fonts": {
-    "family": "IBM Plex Sans",
-    "weight": 400,
     "heading": {
-      "family": "IBM Plex Mono",
-      "weight": 600
+      "family": "Archivo",
+      "weight": 800
     },
     "body": {
-      "family": "IBM Plex Sans",
+      "family": "Archivo",
       "weight": 400
     }
   },
-  "icons": {
-    "library": "lucide"
-  },
   "background": {
-    "decoration": "grid",
     "color": {
-      "light": "#F4F7F6",
-      "dark": "#09080B"
+      "light": "#F3F3F1",
+      "dark": "#000000"
     }
   },
   "styling": {
-    "eyebrows": "breadcrumbs",
     "codeblocks": {
       "theme": {
         "light": "github-light",
-        "dark": "vitesse-dark"
+        "dark": "vitesse-black"
       }
     }
   },
@@ -53,7 +46,6 @@
     "tabs": [
       {
         "tab": "Projects",
-        "icon": "radar",
         "groups": [
           {
             "group": "Start",
@@ -63,14 +55,34 @@
             ]
           },
           {
-            "group": "Tools",
+            "group": "Flagships",
             "pages": [
               "architecture/mutx",
-              "architecture/bollard",
-              "architecture/tablebeam",
+              "architecture/archon",
+              "architecture/bollard"
+            ]
+          },
+          {
+            "group": "Agent controls",
+            "pages": [
               "architecture/boundary-bench",
+              "architecture/switchyard",
+              "architecture/ambient-relay"
+            ]
+          },
+          {
+            "group": "Local-first tools",
+            "pages": [
+              "architecture/tablebeam",
+              "architecture/fieldwork-plugins",
+              "architecture/world-watch"
+            ]
+          },
+          {
+            "group": "Labs and benches",
+            "pages": [
               "architecture/queueglass",
-              "architecture/world-watch",
+              "architecture/barter",
               "architecture/minecraft-apple-silicon"
             ]
           },
@@ -87,7 +99,6 @@
       },
       {
         "tab": "Recipes",
-        "icon": "play",
         "groups": [
           {
             "group": "Reproduce one claim",
@@ -104,7 +115,6 @@
       },
       {
         "tab": "Proof",
-        "icon": "shield-check",
         "groups": [
           {
             "group": "Proof",
@@ -119,13 +129,11 @@
       "anchors": [
         {
           "anchor": "GitHub",
-          "href": "https://github.com/fortunexbt",
-          "icon": "github"
+          "href": "https://github.com/fortunexbt"
         },
         {
           "anchor": "MUTX docs",
-          "href": "https://docs.mutx.dev",
-          "icon": "activity"
+          "href": "https://docs.mutx.dev"
         }
       ]
     }
@@ -217,7 +225,7 @@
     "appearance": "dark",
     "background": "/images/field-grid.svg",
     "fonts": {
-      "family": "IBM Plex Mono"
+      "family": "Archivo"
     }
   },
   "footer": {

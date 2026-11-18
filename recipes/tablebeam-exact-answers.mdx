@@ -2,7 +2,6 @@
 title: "Recipe: rerun the Tablebeam evaluation"
 sidebarTitle: "Tablebeam evaluation"
 description: "Regenerate Tablebeam's published comparison with pandas, SQLite and DuckDB from pinned inputs, offline, and check how many wrong answers sit on tables with their own total row."
-icon: "calculator"
 ---
 
 **Claim:** On 554 WikiTableQuestions specs, Tablebeam returns a silently wrong number 0.4% of the time against 13.7% for pandas, 17.2% for SQLite and 11.7% for DuckDB, and it gets there partly by refusing 20.6% of the specs. The committed results at `f141ee7` follow from the pinned inputs.
@@ -14,7 +13,7 @@ icon: "calculator"
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Needs</span>
-    <span className="fm-proof-value">Git, Python 3.12 with SQLite 3.54.1 · no model, no API key</span>
+    <span className="fm-proof-value">Git, Python 3.12 with SQLite 3.54.1, no model, no API key</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Evidence</span>
@@ -108,7 +107,7 @@ These matched on 23 October 2026 in a fresh clone at `f141ee7`.
 - that Tablebeam answers more questions correctly. It answers fewer: 79.1% correct against 85.0% for pandas on the same specs, and on the hard-format files it refuses 37.0%, including 60 of the 65 Montpellier specs;
 - anything about pandas, SQLite or DuckDB used with explicit column types or a decimal separator. Every executor runs with its defaults;
 - that people can type these questions. None of the 954 WikiTableQuestions questions parsed in their original wording, and the 554 specs are re-asked in Tablebeam's documented form;
-- that the live demo behaves this way. On 23 October 2026 it serves the engine from `0b97d13`, before the total-row refusal was added;
+- that the live demo behaves this way. On 18 November 2026 it served the same engine modules as `main`, but this recipe runs only your local clone;
 - anything about the optional **Ask AI** path, which the evaluation never calls.
 
 Remove the clone when finished:

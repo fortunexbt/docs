@@ -24,7 +24,7 @@ Use these labels consistently:
 
 ## Content map
 
-- `index.mdx` lists every project with its status and links.
+- `index.mdx` lists every project, grouped as on fortunexbt.com, with its status label and a one-line description.
 - `status.mdx` is the dated ledger: status, strongest proof and open gap per project.
 - `architecture/` has one page per project featured on fortunexbt.com.
 - `recipes/` contains runnable, secret-minimal reproductions of one claim each.
@@ -46,7 +46,9 @@ When a project leaves the portfolio, delete its page and add a redirect in `docs
 
 ## Design system
 
-Near-black background with signal cyan and violet accents (set in `docs.json`). IBM Plex Mono for headings and proof labels, IBM Plex Sans for reading. Use Mintlify components when they help navigation. Custom HTML is limited to the evidence strip defined in `style.css`.
+Black and white, matching fortunexbt.com. Pure black (`#000`) in dark mode and paper (`#F3F3F1`) in light mode. The frame teal (`#3DD6C0` in dark mode, `#0A6B5F` in light mode) is the only interface colour and marks links and the current page. The yellow-to-red lens gradient appears only in the logo and favicon. Archivo throughout, condensed (`font-stretch: 62%`) and heavy for headings and project names, normal width for reading.
+
+Custom HTML is limited to the evidence strip and the home page index, both styled in `style.css`. Do not add stat strips, all-caps labels, gradient washes, card grids or arrows on link text. When a project joins the portfolio, add its row to the index in `index.mdx`, its page to `docs.json` under the same group, and its row to `status.mdx`.
 
 ## MDX requirements
 
