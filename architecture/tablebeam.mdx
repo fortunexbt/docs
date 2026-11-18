@@ -2,7 +2,6 @@
 title: "Tablebeam: spreadsheet answers you can check"
 sidebarTitle: "Tablebeam"
 description: "How Tablebeam parses a narrow set of questions about a CSV, calculates over every row without a model, and shows the rows and arithmetic behind each number."
-icon: "table-2"
 ---
 
 Tablebeam answers questions such as `Average body mass g by species` about a CSV. It accepts only a short list of question forms, runs the calculation in pandas over every row and shows what the question parsed to, the function call, the written-out arithmetic and the rows used. A browser demo runs the same Python in WebAssembly, and a Streamlit app adds filters, Google Sheets import and an optional local model for questions the parser refuses.
@@ -10,19 +9,19 @@ Tablebeam answers questions such as `Average body mass g by species` about a CSV
 <div className="fm-evidence-strip">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Status</span>
-    <span className="fm-proof-value">Shipped · browser demo and Streamlit app</span>
+    <span className="fm-proof-value">Shipped, browser demo and Streamlit app</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Runtime</span>
-    <span className="fm-proof-value">Python 3.10–3.12 and pandas · Pyodide 314.0.7 in the browser</span>
+    <span className="fm-proof-value">Python 3.10–3.12 and pandas, Pyodide 314.0.7 in the browser</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Try it</span>
-    <span className="fm-proof-value">[tablebeam-eight.vercel.app](https://tablebeam-eight.vercel.app) · no model, nothing uploaded</span>
+    <span className="fm-proof-value">[tablebeam-eight.vercel.app](https://tablebeam-eight.vercel.app), no model, nothing uploaded</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Proof hooks</span>
-    <span className="fm-proof-value">Pinned evaluation against pandas, SQLite and DuckDB · 397 tests</span>
+    <span className="fm-proof-value">Pinned evaluation against pandas, SQLite and DuckDB, 397 tests</span>
   </div>
 </div>
 
@@ -49,7 +48,7 @@ flowchart LR
 
 `answer_format.py` rounds the displayed value to six significant digits through `Decimal`, half up, after dropping float noise at 15 digits. The result table and downloads keep full precision. In the browser, `web/engine.py` adds the evidence: up to 25 rows behind the number (or behind one group), and the arithmetic written out when 12 or fewer values contribute. For the six astrometry planets in `Average mass earths by discovery method` it prints `(9057.77 + 718.29219982 + 1589.142035 + 3750.3752026 + 6633.07885409 + 6293.0024586) / 6 = 4673.610125018334`.
 
-`web/build.sh` copies four modules from `src/` into the static site byte for byte, and `web/worker.js` loads them into Pyodide off the main thread. `tests/test_web_demo.py` fails if the copies drift from `src/`. The demo ships two real datasets: all 6,451 confirmed planets from the NASA Exoplanet Archive `pscomppars` table, retrieved 22 October 2026, and the 344-row Palmer penguins table (CC0 1.0).
+`web/build.sh` copies four modules from `src/` into the static site byte for byte, and `web/worker.js` loads them into Pyodide off the main thread. `tests/test_web_demo.py` fails if the copies drift from `src/`. On 18 November 2026 the five Python modules served by the live demo were byte-identical to `main` at `17e8feb`, so the demo runs the evaluated engine with the total-row refusal. The demo ships two real datasets: all 6,451 confirmed planets from the NASA Exoplanet Archive `pscomppars` table, retrieved 22 October 2026, and the 344-row Palmer penguins table (CC0 1.0).
 
 The Streamlit app in `src/app.py` uses the same parser and calculation, adds a calculation builder with typed filters, the five previous answers and CSV downloads that neutralise formula-like text. When the parser refuses a question, the user can choose **Ask AI**. `src/assistant_core.py` then picks up to eight rows with a lexical ranker and sends them, the table profile and the question to an OpenAI-compatible endpoint. That path doesn't exist in the browser demo.
 
@@ -131,7 +130,6 @@ To rerun the evaluation, follow [the recipe](/recipes/tablebeam-exact-answers).
 
 ## Limits
 
-- The live demo serves the engine from `0b97d13`, the commit before the evaluation. On 23 October 2026 its `table_analysis.py`, `answer_format.py` and `engine.py` differ from `main`, so the total-row refusal and the two display fixes from the evaluation aren't live yet.
 - Only the listed question forms get a number. There are no filters, joins, rankings or lookups in typed questions. The Streamlit calculation builder adds AND filters.
 - Averages and medians are float64. Only integer sums are exact past 2^53.
 - Text columns holding numbers (`12,467`, `"18,1"`, `£6,600`) are refused rather than parsed.
@@ -148,6 +146,8 @@ To rerun the evaluation, follow [the recipe](/recipes/tablebeam-exact-answers).
 - [Bundled datasets and credits](https://github.com/fortunexbt/tablebeam/blob/main/web/catalog.json)
 - [Tests workflow](https://github.com/fortunexbt/tablebeam/actions/workflows/test.yml)
 - [Releases](https://github.com/fortunexbt/tablebeam/releases)
+
+Reviewed 18 November 2026 against [`17e8feb`](https://github.com/fortunexbt/tablebeam/tree/17e8febb29be88bd80c39fb5748c44512d4f81bc).
 
 <Card title="Rerun the evaluation" icon="calculator" href="/recipes/tablebeam-exact-answers" horizontal>
   Regenerate the published results from pinned inputs in about two minutes, offline, and count the total-row cases.

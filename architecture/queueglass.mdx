@@ -2,7 +2,6 @@
 title: "Queueglass: find the step that limits flow"
 sidebarTitle: "Queueglass"
 description: "A browser tool that replays real arrivals through a team's workflow steps and names the step that holds work back."
-icon: "boxes"
 ---
 
 Queueglass replays a column of real arrivals through 2 to 8 workflow steps, each with the throughput you measured for it, and says which step limits flow and how fast the backlog clears. It is for a team lead looking at PR review, support triage, CI or procurement who has a tracker export and wants a number instead of a hunch.
@@ -10,11 +9,11 @@ Queueglass replays a column of real arrivals through 2 to 8 workflow steps, each
 <div className="fm-evidence-strip">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Status</span>
-    <span className="fm-proof-value">Shipped · live on Vercel</span>
+    <span className="fm-proof-value">Shipped, live on Vercel</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Runtime</span>
-    <span className="fm-proof-value">Next.js 16 static page · Node.js 24 to build</span>
+    <span className="fm-proof-value">Next.js 16 static page, Node.js 24 to build</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Try it</span>
@@ -54,7 +53,7 @@ The line lives in the URL after the `#` (`encodeSetup` and `decodeSetup`), and b
 | [`src/lib/simulation.js`](https://github.com/fortunexbt/queueglass/blob/main/src/lib/simulation.js) | Engine, bottleneck rule, analysis with +1 reruns |
 | [`src/lib/line.js`](https://github.com/fortunexbt/queueglass/blob/main/src/lib/line.js) | Arrivals parsing, period labels, share-link fragment, worked example, headline |
 | [`src/components/SimulatorLab.tsx`](https://github.com/fortunexbt/queueglass/blob/main/src/components/SimulatorLab.tsx) | Page state, verdict, +1 table, playback |
-| [`src/components/FlowBoard.tsx`](https://github.com/fortunexbt/queueglass/blob/main/src/components/FlowBoard.tsx) | The steps at the selected period |
+| [`src/components/FlowBoard.tsx`](https://github.com/fortunexbt/queueglass/blob/main/src/components/FlowBoard.tsx) | Each step at the selected period, with held-back items marked |
 | [`src/components/Timeline.tsx`](https://github.com/fortunexbt/queueglass/blob/main/src/components/Timeline.tsx) | Per-step queue lanes, scrubber, table view |
 | [`scripts/derive-bpi2019.mjs`](https://github.com/fortunexbt/queueglass/blob/main/scripts/derive-bpi2019.mjs) | Builds the example CSV from the BPI Challenge 2019 log |
 | [`tests/simulation.test.js`](https://github.com/fortunexbt/queueglass/blob/main/tests/simulation.test.js), [`tests/line.test.js`](https://github.com/fortunexbt/queueglass/blob/main/tests/line.test.js) | Replay, conservation, blocking, parsing and headline tests |
@@ -80,7 +79,7 @@ npm ci
 npm run verify
 ```
 
-`npm run verify` runs the secret scan, ESLint, the type check, the unit tests and `next build`. On 23 October 2026 it passed, with `tests 19`, `pass 19`, `fail 0`.
+`npm run verify` runs the secret scan, ESLint, the type check, the unit tests and `next build`. On 18 November 2026 at `a19fbba` it passed, with `tests 19`, `pass 19`, `fail 0`. The first run stopped at `next build` with a Next.js notice that version 16.4.2 has a known security vulnerability, and the same command passed when rerun.
 
 For the browser smoke, build and serve the app, then run the smoke from a second terminal:
 
@@ -89,7 +88,7 @@ npm run start -- -p 4173
 npm run test:browser
 ```
 
-It printed `Browser smoke passed: example verdict, playback, scrubbing, your own line, WIP and weeks, share links, 404, phone and reduced motion.` It needs Playwright's Chromium (`npx playwright install chromium`).
+On 18 November 2026 it printed `Browser smoke passed: example verdict, playback, scrubbing, your own line, WIP and weeks, share links, 404, phone and reduced motion.` It needs Playwright's Chromium (`npx playwright install chromium`).
 
 To reproduce the example headline without a browser:
 
@@ -114,7 +113,7 @@ Rebuilding the CSV itself needs the 728 MB `BPI_Challenge_2019.xes` from the DOI
 - The +1 analysis changes one step at a time. It doesn't search for the cheapest combination of changes.
 - Everything runs in the browser tab. There is no account, storage or tracker integration, so you paste data in by hand.
 - The browser smoke runs in Chromium only.
-- `package.json` still says version `1.0.0` and the only GitHub release is v1.0.0 from July 2026, while `CHANGELOG.md` lists 2.0.0 for the 23 October 2026 rework. The live site serves the rework.
+- `package.json` still says version `1.0.0` and the only GitHub release is v1.0.0 from July 2026, while `CHANGELOG.md` lists 2.0.0 for the 23 October 2026 rework and 2.1.0 for the 18 November 2026 redesign. The live site serves the redesign.
 
 ## Source
 
@@ -124,3 +123,5 @@ Rebuilding the CSV itself needs the 728 MB `BPI_Challenge_2019.xes` from the DOI
 - [Changelog](https://github.com/fortunexbt/queueglass/blob/main/CHANGELOG.md)
 - [Real-arrivals rework, PR #10](https://github.com/fortunexbt/queueglass/pull/10)
 - [Browser smoke](https://github.com/fortunexbt/queueglass/blob/main/scripts/browser-smoke.mjs)
+
+Reviewed 18 November 2026 against [`a19fbba`](https://github.com/fortunexbt/queueglass/tree/a19fbba64fe262e1fab497ecf3329af601373a09).

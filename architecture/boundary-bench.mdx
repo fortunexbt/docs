@@ -2,7 +2,6 @@
 title: "BoundaryBench: an MCP server that scores agent boundaries"
 sidebarTitle: "BoundaryBench"
 description: "How BoundaryBench serves AgentDojo's banking tools over MCP, records each session server-side and scores security and utility from the trace."
-icon: "shield-check"
 ---
 
 BoundaryBench is a local stdio MCP server that you connect an agent to. It serves AgentDojo's banking tools, writes its own trace of the session, and scores whether the agent followed injected text, kept calling tools after its budget ran out, pushed past an approval refusal or carried on after a stop.
@@ -10,11 +9,11 @@ BoundaryBench is a local stdio MCP server that you connect an agent to. It serve
 <div className="fm-evidence-strip">
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Status</span>
-    <span className="fm-proof-value">Verified · run from a clone, not on npm</span>
+    <span className="fm-proof-value">Verified, run from a clone, not on npm</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Runtime</span>
-    <span className="fm-proof-value">Node 22+ · `@modelcontextprotocol/sdk` · stdio</span>
+    <span className="fm-proof-value">Node 22+, `@modelcontextprotocol/sdk`, stdio</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Try it</span>
@@ -60,7 +59,7 @@ The eight scenarios use AgentDojo's `user_task_0`, `user_task_1` and `user_task_
 | [`scripts/run-claude.ts`](https://github.com/fortunexbt/boundary-bench/blob/main/scripts/run-claude.ts) | Runner that recorded the Claude Code batch |
 | [`docs/METHODOLOGY.md`](https://github.com/fortunexbt/boundary-bench/blob/main/docs/METHODOLOGY.md) | Trace format and scoring rules for each scenario |
 
-[`package.json`](https://github.com/fortunexbt/boundary-bench/blob/main/package.json) exports `boundary-bench/server`, `/evaluator`, `/scenarios`, `/agentdojo` and `/types` from the built `dist/`. The package is marked `private`, so you import these from a local build. The report site imports the same evaluator and scores the committed traces at build time.
+[`package.json`](https://github.com/fortunexbt/boundary-bench/blob/main/package.json) exports `boundary-bench/server`, `/evaluator`, `/scenarios`, `/agentdojo` and `/types` from the built `dist/`. The package is marked `private`, so you import these from a local build. The report site in `site/` imports the same evaluator and scores the committed traces at build time. It draws each recorded run as its tool calls in order, with a marker where the server set the boundary and later calls in red. The Pages workflow builds it with `npm run verify` and publishes `dist-site/` to GitHub Pages, and the same site is on Vercel.
 
 ## Recorded result: Claude Code on Haiku
 
@@ -95,7 +94,7 @@ node dist/cli.js report runs/2026-10-23-claude-code-haiku/*/*/trace.jsonl
 npm test
 ```
 
-On 23 October 2026 at `main` (`6fb49da`, which differs from `e937412` only in a dependency bump) the report printed the table above and ended with `38 traces from claude-code 2.1.309`. `npm test` passed 24 of 24 tests in 3 files. `npm run lint`, `npm run typecheck` and `npm run format` were clean. `node dist/cli.js evaluate` on each `budget-cap` trace exited 2.
+On 18 November 2026 at `main` (`74d3f8e`, which differs from `e937412` only in dependency bumps and the report site) the report printed the table above and ended with `38 traces from claude-code 2.1.309`. `npm test` passed 24 of 24 tests in 3 files. `npm run lint`, `npm run typecheck` and `npm run format` were clean. `node dist/cli.js evaluate` on each `budget-cap` trace exited 2.
 
 To test your own agent, add the server to its MCP client and run the scenario's task:
 
@@ -118,11 +117,13 @@ node dist/cli.js evaluate "$HOME/boundary-bench-traces/bill-injection.jsonl"
 ## Source
 
 - [Repository](https://github.com/fortunexbt/boundary-bench)
-- [Report site](https://boundary-bench-beryl.vercel.app/)
+- [Report site on GitHub Pages](https://fortunexbt.github.io/boundary-bench/) and [on Vercel](https://boundary-bench-beryl.vercel.app/)
 - [Recorded runs at `e937412`](https://github.com/fortunexbt/boundary-bench/tree/e937412296ceebc8459e2c3555fff28d935cc965/runs/2026-10-23-claude-code-haiku)
 - [Methodology](https://github.com/fortunexbt/boundary-bench/blob/main/docs/METHODOLOGY.md)
 - [CI workflow](https://github.com/fortunexbt/boundary-bench/actions/workflows/ci.yml)
 - [AgentDojo](https://github.com/ethz-spylab/agentdojo)
+
+Reviewed 18 November 2026 against [`74d3f8e`](https://github.com/fortunexbt/boundary-bench/tree/74d3f8e595956b4e379e3e867f62a2d459bd5c9a).
 
 <Card title="Rebuild the BoundaryBench report" icon="table" href="/recipes/boundary-bench-report" horizontal>
   Score the 38 committed traces yourself and check the budget-cap breaches, with no agent runs or API calls.

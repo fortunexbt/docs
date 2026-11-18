@@ -1,7 +1,7 @@
 # Field Manual
 
 [![Docs proof](https://github.com/fortunexbt/docs/actions/workflows/docs.yml/badge.svg)](https://github.com/fortunexbt/docs/actions/workflows/docs.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-48EEFF.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-3DD6C0.svg)](LICENSE)
 
 Architecture notes, measured results and reproduction steps for the projects on [fortunexbt.com](https://fortunexbt.com). Read it at [fortunexbt-docs.vercel.app](https://fortunexbt-docs.vercel.app). Each page says what the code does, links the files that do it, gives commands that reproduce the main claim, and lists what the project does not do.
 
@@ -9,13 +9,13 @@ Architecture notes, measured results and reproduction steps for the projects on 
 
 | Path | Contents |
 |---|---|
-| `index.mdx` | Project list and status vocabulary |
+| `index.mdx` | Project index, grouped as on fortunexbt.com, and status vocabulary |
 | `status.mdx` | Dated status ledger for every project |
-| `architecture/` | One page per project: MUTX, Bollard, Tablebeam, BoundaryBench, Queueglass, World Watch, Minecraft on Apple silicon, Solar Drift, Loop Courier, Terminal Starfield, ckitty |
+| `architecture/` | One page per project. Flagships are MUTX, Archon and Bollard. Agent controls are BoundaryBench, Switchyard and Ambient Relay. Local-first tools are Tablebeam, Fieldwork plugins and World Watch. Labs and benches are Queueglass, Barter and Minecraft on Apple silicon (Silicon Shader). Games are Solar Drift, Loop Courier, Terminal Starfield and ckitty |
 | `recipes/` | Step-by-step reproductions of one claim each |
 | `proof/` | What a build or release claim needs behind it |
 
-The site uses the Mintlify `linden` theme, with colours and type set in `docs.json`, `style.css` and the SVG assets.
+The site uses the Mintlify `linden` theme. Colours and type are set in `docs.json` and `style.css`, which also styles the home page index. The logo and favicon are SVG paths drawn from Archivo, so they need no font at runtime.
 
 ## Status vocabulary
 
@@ -46,7 +46,7 @@ npx --yes mint@4.2.723 a11y
 
 The same checks run in GitHub Actions on every pull request and push to `main`. Editorial rules live in [`AGENTS.md`](AGENTS.md) and contribution requirements in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-Project pages were last reviewed against each repository's default branch on 23 October 2026. Update the date on a page whenever its facts change.
+Every project was last checked against its repository's default branch on 18 November 2026. Update the date on a page whenever its facts change.
 
 ## Hosting
 

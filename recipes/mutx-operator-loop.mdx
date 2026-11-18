@@ -2,7 +2,6 @@
 title: "Recipe: run the MUTX API locally and check a policy"
 sidebarTitle: "MUTX local policy check"
 description: "Start the MUTX control plane on SQLite, sign in with the CLI, register and stop an agent, and watch a block rule decide two tool calls, with no hosted account or Docker."
-icon: "activity"
 ---
 
 **Claim:** a fresh clone of `mutx-dev/mutx-dev` runs its control plane on SQLite with no account, enforces roles from the database, and returns `block` for a tool call that matches a tenant rule and `allow` for one that doesn't.
@@ -14,7 +13,7 @@ icon: "activity"
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Needs</span>
-    <span className="fm-proof-value">Git, Python 3.11, `uv`, `curl`, `sqlite3` · no Docker, no API key, no account</span>
+    <span className="fm-proof-value">Git, Python 3.11, `uv`, `curl`, `sqlite3`, no Docker, no API key, no account</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Evidence</span>

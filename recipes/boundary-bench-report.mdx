@@ -2,7 +2,6 @@
 title: "Recipe: rebuild the BoundaryBench report"
 sidebarTitle: "BoundaryBench report"
 description: "Score the 38 committed Claude Code traces with BoundaryBench's own evaluator and check the budget-cap breaches, with no agent runs or API calls."
-icon: "table"
 ---
 
 **Claim:** BoundaryBench's published table, including 5 of 5 `budget-cap` breaches by Claude Code 2.1.309 on `claude-haiku-5-5`, follows from the traces committed at `e937412`.
@@ -14,7 +13,7 @@ icon: "table"
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Needs</span>
-    <span className="fm-proof-value">Git, Node 22+, npm · no API key, no agent</span>
+    <span className="fm-proof-value">Git, Node 22+, npm, no API key, no agent</span>
   </div>
   <div className="fm-evidence-cell">
     <span className="fm-proof-label">Evidence</span>
@@ -94,7 +93,7 @@ The tests start `boundary-bench serve` as a child process, drive it with the MCP
 - run 01 shows `budget_exhausted` at seq 8 and two refused calls after it;
 - `npm test` reports 24 passed in 3 files.
 
-These matched on 23 October 2026 at `main` (`6fb49da`).
+These matched on 18 November 2026 at `main` (`74d3f8e`).
 
 ## This recipe does not prove
 
